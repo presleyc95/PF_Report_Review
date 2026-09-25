@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PoleForeman Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#14213A; --muted:#5E6878; --rule:#DCE1E8; --rule-strong:#C3CBD6;
+  --blue:#1C4E9E; --blue-soft:#E4ECF8; --amber:#B97A06; --amber-soft:#FDF3DE; --amber-bar:#E9A82B;
+  --ok:#1F7A4D; --ok-soft:#E2F3EA; --bad:#B3362B; --bad-soft:#FBE6E3; --c:#6B4FB3; --c-soft:#EEE9FA;
+  --sans:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --cond:"Barlow Semi Condensed","Arial Narrow","Barlow",system-ui,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0D1420; --surface:#141D2D; --ink:#E4E9F1; --muted:#95A0B2; --rule:#26324A; --rule-strong:#34425E;
+  --blue:#7FA6EE; --blue-soft:#1B2A45; --amber:#F2C25A; --amber-soft:#33291A; --amber-bar:#F2C25A;
+  --ok:#5CC08C; --ok-soft:#16301F; --bad:#EE7B70; --bad-soft:#3A1D1A; --c:#B39DF0; --c-soft:#2A2340;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1420; --surface:#141D2D; --ink:#E4E9F1; --muted:#95A0B2; --rule:#26324A; --rule-strong:#34425E;
+  --blue:#7FA6EE; --blue-soft:#1B2A45; --amber:#F2C25A; --amber-soft:#33291A; --amber-bar:#F2C25A;
+  --ok:#5CC08C; --ok-soft:#16301F; --bad:#EE7B70; --bad-soft:#3A1D1A; --c:#B39DF0; --c-soft:#2A2340;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--cond);font-weight:700;margin:0}
+.wrap{max-width:1500px;margin:0 auto;padding:0 20px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.mark{display:flex;align-items:center;gap:10px;font-family:var(--cond);font-weight:700;font-size:19px;white-space:nowrap}
+.mark svg{width:22px;height:22px;color:var(--amber-bar)}
+.spacer{flex:1}
+.btn{border:1px solid var(--rule-strong);background:var(--surface);border-radius:6px;padding:7px 12px;font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0D1420}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#0D1420}}
+.btn.sm{padding:4px 9px;font-size:13px}
+.iconbtn{border:0;background:transparent;padding:6px;border-radius:6px;color:var(--muted)}
+.iconbtn:hover{color:var(--ink);background:var(--bg)}
+.muted{color:var(--muted)}
+.drop{margin:48px auto;max-width:760px;border:2px dashed var(--rule-strong);border-radius:14px;background:var(--surface);padding:52px 32px;text-align:center}
+.drop.over{border-color:var(--blue);background:var(--blue-soft)}
+.drop h1{font-size:32px;margin-bottom:8px}
+.drop p{color:var(--muted);margin:0 auto 22px;max-width:56ch}
+.drop .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.files{list-style:none;padding:0;margin:16px auto 0;max-width:560px;text-align:left;font-size:14px;max-height:260px;overflow:auto}
+.files li{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--rule)}
+.files .e{color:var(--bad)}.files .g{color:var(--ok)}
+.head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;padding:22px 0 6px}
+.head h1{font-size:30px;line-height:1.1}
+.head .sub{color:var(--muted);margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));border:1px solid var(--rule);border-radius:10px;background:var(--surface);margin:16px 0;overflow:hidden}
+.kpi{padding:12px 16px;border-right:1px solid var(--rule)}
+.kpi:last-child{border-right:0}
+.kpi .v{font-family:var(--cond);font-size:26px;font-weight:700;line-height:1.1}
+.kpi .l{font-size:13px;color:var(--muted)}
+.kpi .d{font-size:12px;color:var(--muted)}
+.v.bad{color:var(--bad)}.v.warn{color:var(--amber)}.v.ok{color:var(--ok)}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:10px;min-width:0}
+.tabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--rule);padding:0 8px}
+.tab{border:0;background:none;padding:12px 12px 10px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;font-family:var(--cond);font-size:16px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected=true]{color:var(--blue);border-bottom-color:var(--blue)}
+.tab .n{font-family:var(--sans);font-size:12px;font-weight:500;color:var(--muted);margin-left:4px}
+.view{padding:16px}
+.viewbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.viewbar h2{font-size:20px;margin-right:auto}
+.hint{font-size:13px;color:var(--muted);width:100%}
+.tscroll{overflow-x:auto;border:1px solid var(--rule);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap;vertical-align:top}
+th{background:var(--bg);font-weight:600;font-size:13px;color:var(--muted)}
+th.s{cursor:pointer;user-select:none}th.s:hover{color:var(--ink)}th.sorted{color:var(--blue)}
+td.num,th.num{text-align:right}
+tbody tr:hover td{background:var(--blue-soft)}
+tr.click{cursor:pointer}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--amber-soft);color:var(--amber)}.pill.bad{background:var(--bad-soft);color:var(--bad)}.pill.info{background:var(--blue-soft);color:var(--blue)}.pill.c{background:var(--c-soft);color:var(--c)}.pill.none{background:var(--bg);color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--amber-bar)}.dot.bad{background:var(--bad)}.dot.none{background:var(--rule-strong)}
+.pct{font-weight:600}.pct.warn{color:var(--amber)}.pct.bad{color:var(--bad)}
+.meter{display:flex;align-items:center;gap:8px;min-width:130px}
+.meter .tr{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative;min-width:60px}
+.meter .tr i{display:block;height:100%;background:var(--blue)}
+.meter .tr i.warn{background:var(--amber-bar)}.meter .tr i.bad{background:var(--bad)}
+.meter .tr i.c{background:var(--c)}
+.meter span{font-size:13px;font-weight:600;width:40px;text-align:right}
+/* poles master-detail */
+.md{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px}
+@media (max-width:900px){.md{grid-template-columns:minmax(0,1fr)}}
+.plist{display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 150px);overflow:auto;position:sticky;top:calc(env(safe-area-inset-top,0px) + 66px)}
+@media (max-width:900px){.plist{position:static;max-height:none;flex-direction:row;overflow-x:auto}}
+.pcard{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:8px 10px;text-align:left;display:grid;grid-template-columns:auto 1fr auto;gap:2px 8px;align-items:center;min-width:200px}
+.pcard:hover{border-color:var(--blue)}
+.pcard[aria-current=true]{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue);background:var(--blue-soft)}
+.pcard b{font-family:var(--cond);font-size:17px}
+.pcard .spec{grid-column:2/4;font-size:12px;color:var(--muted)}
+.pcard .h{font-size:13px;font-weight:600}
+.detail h2{font-size:26px}
+.dhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.imgs{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-bottom:16px;align-items:start}
+@media (max-width:700px){.imgs{grid-template-columns:minmax(0,1fr)}}
+.imgs figure{margin:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:#111;position:relative}
+.imgs figure.light{background:#fff}
+.imgs img{display:block;width:100%;height:auto}
+.imgs figcaption{position:absolute;left:8px;top:6px;font-size:12px;font-weight:600;color:#fff;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:10px}
+.imgs figure.light figcaption{color:#14213A;background:rgba(255,255,255,.85)}
+.sec{margin:18px 0}
+.sec h3{font-size:18px;margin-bottom:8px;display:flex;gap:8px;align-items:center}
+.cmp td.b{background:transparent}.cmp th.c,.cmp td.c{background:var(--c-soft)}
+.issues{display:grid;gap:8px}
+.iss{border:1px solid var(--rule);border-left:4px solid var(--blue);border-radius:8px;padding:8px 12px;font-size:14px}
+.iss.bad{border-left-color:var(--bad)}.iss.warn{border-left-color:var(--amber-bar)}.iss.ok{border-left-color:var(--ok)}
+.iss b{font-weight:600}
+.iss .w{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chart{display:grid;gap:4px}
+.crow{display:grid;grid-template-columns:60px 1fr;gap:10px;align-items:center;font-size:13px}
+.cbars{display:grid;gap:2px;position:relative}
+.cbar{height:9px;border-radius:3px;background:var(--blue)}
+.cbar.c{background:var(--c)}
+.cbars .lim{position:absolute;top:-2px;bottom:-2px;width:0;border-left:2px dashed var(--bad)}
+.cbars .wl{position:absolute;top:-2px;bottom:-2px;width:0;border-left:2px dotted var(--amber-bar)}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);flex-wrap:wrap;margin-bottom:8px}
+.legend i{display:inline-block;width:14px;height:8px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.seg{display:inline-flex;border:1px solid var(--rule-strong);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:var(--bg);padding:6px 10px;font-size:13px;font-weight:500;border-right:1px solid var(--rule-strong);white-space:nowrap}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--blue);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed=true]{color:#0D1420}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed=true]{color:#0D1420}}
+.kpib{all:unset;cursor:pointer;display:block}
+.kpib:hover .l{color:var(--blue);text-decoration:underline}
+.kpib:focus-visible{outline:2px solid var(--blue);outline-offset:4px;border-radius:4px}
+.spacing{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.spacing svg{width:100%;max-width:880px;height:auto;display:block;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
+.gapnote{font-size:13px;margin-top:8px}
+.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.settings label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+.settings input,.settings select{width:100%;border:1px solid var(--rule-strong);background:var(--bg);border-radius:6px;padding:6px 8px}
+.settings .d{font-size:12px;color:var(--muted);margin-top:3px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.filters select,.filters input{border:1px solid var(--rule-strong);background:var(--bg);border-radius:6px;padding:6px 8px}
+.lb{position:fixed;inset:0;background:rgba(5,10,20,.8);z-index:60;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 12px) 12px calc(env(safe-area-inset-bottom,0px) + 12px)}
+.lb .bar{display:flex;gap:8px;align-items:center;color:#fff;margin-bottom:8px}
+.lb .bar .btn{background:#1b2436;color:#fff;border-color:#34425E}
+.lb .pg{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start}
+.lb img{max-width:100%;background:#fff;border-radius:4px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-weight:600;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:70}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+[hidden]{display:none!important}
+@media (max-width:700px){.wrap{padding:0 12px}.view{padding:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4 14h6.5L9 22l10-13h-6.8L13.5 2z"/></svg>PoleForeman Review</div>
+  <span class="spacer"></span>
+  <button class="btn" id="addMore" hidden>Add PDFs</button>
+  <button class="btn" id="clearAll" hidden>Start over</button>
+  <button class="iconbtn" id="themeBtn" title="Switch light / dark" aria-label="Switch light or dark theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+</div></header>
+<input type="file" id="file" accept="application/pdf,.pdf" multiple hidden>
+
+<section class="wrap" id="empty">
+  <div class="drop" id="drop">
+    <h1>Drop PoleForeman reports here</h1>
+    <p>Add a whole line of pole loading analysis PDFs, 250B-only or 250B + 250C. Each pole is checked against the report's own numbers, against NESC load factors, and against its neighbors. Nothing leaves your browser.</p>
+    <div class="row"><button class="btn primary" id="pick">Choose PDFs</button><button class="btn" id="restore" hidden>Reopen last session</button></div>
+    <ul class="files" id="fileList"></ul>
+  </div>
+</section>
+
+<main class="wrap" id="app" hidden>
+  <section class="head">
+    <div><h1 id="hTitle"></h1><div class="sub" id="hSub"></div></div>
+    <span class="spacer"></span><button class="btn primary" id="reviewBtn" hidden>Review</button>
+  </section>
+  <section class="kpis" id="kpis"></section>
+  <section class="panel">
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+    <div class="view" id="view"></div>
+  </section>
+  <p class="muted" style="font-size:12px;margin:14px 0 40px">Checks flag items for engineering review; they don't replace a PE's judgment. Clearance and lead-ratio limits are adjustable in Settings.</p>
+</main>
+<div class="lb" id="lb" hidden><div class="bar"><b id="lbTitle"></b><span class="spacer"></span><button class="btn sm" id="lbPrev">← Prev</button><span id="lbN"></span><button class="btn sm" id="lbNext">Next →</button><button class="btn sm" id="lbClose">Close</button></div><div class="pg" id="lbPg"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script>
+/* ---- IKE PoleForeman report parser ---- */
+function pfPageLines(items, vpTransform, mult) {
+  const rows = [];
+  for (const it of items) {
+    const s = it.str; if (!s || !s.trim()) continue;
+    const t = mult(vpTransform, it.transform);
+    const x = t[4], y = t[5];
+    let row = rows.find(r => Math.abs(r.y - y) < 2.5);
+    if (!row) { row = { y, parts: [] }; rows.push(row); }
+    row.parts.push({ x, w: it.width || 0, s: s.trim() });
+  }
+  rows.sort((a, b) => a.y - b.y);
+  return rows.map(r => {
+    r.parts.sort((a, b) => a.x - b.x);
+    const cells = [], xs = []; let prev = null;
+    for (const p of r.parts) {
+      const gap = prev ? p.x - (prev.x + prev.w) : 99;
+      if (prev && gap < 3) cells[cells.length - 1] += (gap > 0.8 ? ' ' : '') + p.s; else { cells.push(p.s); xs.push(p.x); }
+      prev = p;
+    }
+    return { y: r.y, cells, xs, text: cells.join(' ').replace(/\s+/g, ' ').trim() };
+  });
+}
+const pfNum = s => { if (s == null) return null; const m = String(s).replace(/,/g, '').match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
+function pfLoad(s) {
+  s = String(s || '').trim();
+  if (!s || /^NA$/i.test(s)) return { pct: null, mode: '' };
+  const m = s.match(/^(-?[\d.]+)\s*%?\s*-?\s*([A-Za-z]*)$/);
+  return m ? { pct: parseFloat(m[1]), mode: m[2] || '' } : { pct: null, mode: s };
+}
+function pfParse(pages) {
+  // pages: [{lines, pageNo}]
+  const R = { label: '', poleSpec: '', species: '', grade: '', district: '', edition: '', sw: '', db: '', licensed: '', opco: '', user: '', date: '', summary: [], summaryPage: null, rules: {}, ruleOrder: [], statusTargets: [], pages: pages.length };
+  let rule = null, sec = 'head', span = null, wire = null, circuit = null, comm = false, anchor = null, guyPart = '', equipCat = '';
+  const newRule = (r, pg) => { if (!R.rules[r]) { R.rules[r] = { rule: r, firstPage: pg, pages: [], head: {}, spans: [], anchors: [], equipment: [], nesc: {}, statusKeys: {} }; R.ruleOrder.push(r); } return R.rules[r]; };
+  const target = (key, pg, x, y) => R.statusTargets.push({ key, page: pg, x, y });
+  pages.forEach(({ lines, pageNo }) => {
+    let isSummary = false;
+    for (const L of lines) {
+      const t = L.text, c = L.cells; let m;
+      // header / footer
+      if (/^Licensed:/i.test(t)) { R.licensed = t.replace(/^Licensed:\s*/i, ''); continue; }
+      if (/^Op Co:/i.test(t)) { R.opco = t.replace(/^Op Co:\s*/i, ''); continue; }
+      if (/^Project:/i.test(t)) continue;
+      if ((m = t.match(/SW:\s*(V[\d.]+),\s*DB:\s*(V[\d.]+)/))) { R.sw = m[1]; R.db = m[2]; }
+      if ((m = t.match(/\b(250[A-Z])\s+Summary:/))) {
+        const nr = m[1];
+        if (nr !== rule) { rule = nr; sec = 'head'; span = wire = anchor = null; equipCat = ''; comm = false; }
+        const ro = newRule(rule, pageNo); if (!ro.pages.includes(pageNo)) ro.pages.push(pageNo);
+        if (ro.firstPage === pageNo) c.forEach((cell, i) => { if (/^(Pole|Framings|Guying)$/.test(cell)) target(`${rule}|comp|${cell}`, pageNo, L.xs[i], L.y); });
+        continue;
+      }
+      if (/Analysis Summary/.test(t)) { isSummary = true; R.summaryPage = pageNo; continue; }
+      if (/^ser:|^User:/i.test(t)) { if ((m = t.match(/^u?ser:\s*(\S+)/i))) R.user = m[1]; if ((m = t.match(/Date:\s*(.+)$/))) R.date = m[1].trim(); continue; }
+      if (/^\d+ of \d+$/.test(t) || /^[A-Z]?:\\/.test(t) || /^:\\/.test(t)) continue;
+      if (isSummary) {
+        const i = c.findIndex(x => /^250[A-Z]$/.test(x));
+        if (i >= 0) {
+          const v = c.slice(i);
+          const row = { rule: v[0], temp: pfNum(v[1]), wind: v[2], ice: pfNum(v[3]), poleH: pfNum(v[4]), poleV: pfNum(v[5]), framings: /NA/i.test(v[6]) ? null : pfNum(v[6]), guying: /NA/i.test(v[7]) ? null : pfNum(v[7]) };
+          R.summary.push(row);
+          ['poleH', 'poleV', 'framings', 'guying'].forEach((k, j) => { if (L.xs[i + 4 + j] != null && row[k] != null) target(`summary|${row.rule}|${k}`, pageNo, L.xs[i + 4 + j], L.y); });
+        }
+        c.forEach(cell => {
+          if ((m = cell.match(/^Pole:\s*(.+)$/))) R.poleSpec = R.poleSpec || m[1];
+          if ((m = cell.match(/^Label:\s*(.+)$/))) R.label = R.label || m[1];
+          if ((m = cell.match(/^Species:\s*(.+)$/))) R.species = R.species || m[1];
+          if ((m = cell.match(/^Grade:\s*(.+)$/))) R.grade = R.grade || m[1];
+          if ((m = cell.match(/^District:\s*(.+)$/))) R.district = R.district || m[1];
+          if ((m = cell.match(/^Edition:\s*(.+)$/))) R.edition = R.edition || m[1];
+        });
+        continue;
+      }
+      if (!rule) continue;
+      const ro = R.rules[rule];
+      if (!ro.pages.includes(pageNo)) ro.pages.push(pageNo);
+      if (/^Spans$/.test(t)) { sec = 'spans'; continue; }
+      if (/^Guying$/.test(t)) { sec = 'guying'; continue; }
+      if (/^Equipment$/.test(t)) { sec = 'equipment'; continue; }
+      if (/^NESC$/.test(t)) { sec = 'nesc'; continue; }
+      if (sec === 'head') {
+        c.forEach((cell, i) => {
+          const h = ro.head;
+          if ((m = cell.match(/^Pole:\s*(.+)$/))) { h.poleSpec = m[1]; target(`${rule}|comp|Overall`, pageNo, L.xs[i], L.y); }
+          else if ((m = cell.match(/^Species:\s*(.+)$/))) h.species = m[1];
+          else if ((m = cell.match(/^Pole Strength Remaining\s*([\d.]+)%/))) h.strength = parseFloat(m[1]);
+          else if ((m = cell.match(/^Horz Loading:\s*([\d.]+)%/))) h.horz = parseFloat(m[1]);
+          else if ((m = cell.match(/^Vert Loading:\s*([\d.]+)%/))) h.vert = parseFloat(m[1]);
+          else if ((m = cell.match(/^Label:\s*(.+)$/))) h.label = m[1];
+          else if ((m = cell.match(/^Setting Depth:\s*([\d.]+)/))) h.setting = parseFloat(m[1]);
+          else if ((m = cell.match(/^Soil:\s*(.+)$/))) h.soil = m[1];
+          else if ((m = cell.match(/^Rule:\s*(.+)$/))) h.rule = m[1];
+          else if ((m = cell.match(/^Grade:\s*(.+)$/))) h.grade = m[1];
+          else if ((m = cell.match(/^District:\s*(.+)$/))) h.district = m[1];
+          else if ((m = cell.match(/^Edition:\s*(.+)$/))) h.edition = m[1];
+          else if ((m = cell.match(/^Temp:\s*(-?[\d.]+)/))) h.temp = parseFloat(m[1]);
+          else if ((m = cell.match(/^Wind:\s*([\d.]+)\s*(psf|mph)?/i))) { h.wind = parseFloat(m[1]); h.windUnit = (m[2] || '').toLowerCase(); }
+          else if ((m = cell.match(/^Ice:\s*([\d.]+)/))) h.ice = parseFloat(m[1]);
+          else if ((m = cell.match(/^Lat:\s*(-?[\d.]+)/))) h.lat = parseFloat(m[1]);
+          else if ((m = cell.match(/^Long:\s*(-?[\d.]+)/))) h.lon = parseFloat(m[1]);
+          else if ((m = cell.match(/^Elevation:\s*(-?[\d.]+)/))) h.elev = parseFloat(m[1]);
+          else if (/^(Initial|Final|Creep)$/i.test(cell)) h.state = cell;
+          else if (/^\d+\/[A-Z]?\d+\s/.test(cell) && !h.spec2) h.spec2 = cell;
+        });
+        continue;
+      }
+      if (sec === 'spans') {
+        if ((m = t.match(/^Span\s+(\d+):\s*([\d.]+)'\s*<\s*([\d.]+)°?/))) { span = { n: +m[1], length: +m[2], bearing: +m[3], wires: [], comms: [] }; ro.spans.push(span); wire = null; comm = false; target(`${rule}|span|${span.n}`, pageNo, L.xs[0], L.y); continue; }
+        if (!span) continue;
+        if (/^Power:$/.test(t)) { comm = false; continue; }
+        if ((m = t.match(/^Circuit:\s*(\S+)\s*Circuit Type:\s*(.+)$/))) { circuit = { id: m[1], type: m[2] }; continue; }
+        if (/^Communication:$/.test(t)) { comm = true; wire = null; continue; }
+        const rsI = c.findIndex(x => /^Ruling Span=/.test(x));
+        if (rsI >= 0) {
+          const head = c[0]; const di = head.indexOf(' - ');
+          wire = { kind: di > 0 ? head.slice(0, di).trim() : head, conductor: di > 0 ? head.slice(di + 3).trim() : '', ruling: pfNum(c[rsI]), tension: pfNum((c.find(x => /^Design Tension=/.test(x)) || '')), framing: ((c.find(x => /^Framing:/.test(x)) || '').replace(/^Framing:\s*/, '')), circuit: circuit ? circuit.id : '', circuitType: circuit ? circuit.type : '', phases: [] };
+          span.wires.push(wire); comm = false; continue;
+        }
+        if (/^(Phase|Insulator|Support|Cable)\b/.test(c[0])) continue;
+        if (comm && c.length >= 8 && pfNum(c[1]) != null) {
+          span.comms.push({ cable: c[0], ruling: pfNum(c[1]), attach: pfNum(c[2]), offset: pfNum(c[3]), dia: pfNum(c[4]), weight: pfNum(c[5]), tension: pfNum(c[6]), sag: pfNum(c[7]), owner: c[8] || '' });
+          continue;
+        }
+        if (wire && c.length >= 10 && /^[A-Z0-9]{1,3}$/.test(c[0]) && pfNum(c[1]) != null) {
+          const b = pfLoad(c[4]), s = pfLoad(c[6]), ins = pfLoad(c[8]);
+          wire.phases.push({ phase: c[0], attach: pfNum(c[1]), offset: pfNum(c[2]), bracket: c[3], bracketLoad: b.pct, bracketMode: b.mode, support: c[5], supportLoad: s.pct, supportMode: s.mode, insulator: c[7], insLoad: ins.pct, insMode: ins.mode, angle: pfNum(c[9]) });
+          continue;
+        }
+      }
+      if (sec === 'guying') {
+        if ((m = t.match(/^Anchor\s+(\d+):\s*([\d.]+)'\s*<\s*([\d.]+)°?/))) { anchor = { n: +m[1], lead: +m[2], bearing: +m[3], wires: [], anchor: null }; ro.anchors.push(anchor); guyPart = ''; target(`${rule}|anchor|${anchor.n}`, pageNo, L.xs[0], L.y); continue; }
+        if (/^Guy Wires:$/.test(t)) { guyPart = 'wires'; continue; }
+        if (/^Anchor:$/.test(t)) { guyPart = 'anchor'; continue; }
+        if (!anchor) continue;
+        if (guyPart === 'wires' && c.length >= 5 && pfNum(c[1]) != null && pfNum(c[2]) != null && /"/.test(c[0])) {
+          anchor.wires.push({ size: c[0], attach: pfNum(c[1]), tension: pfNum(c[2]), strength: pfNum(c[3]), load: pfNum(c[4]), insulator: c[5] || '', insStrength: pfNum(c[6]), insLoad: pfNum(c[7]) });
+          continue;
+        }
+        if (guyPart === 'anchor' && c.length >= 5 && pfNum(c[2]) != null && pfNum(c[3]) != null && !/^Anchor$/.test(c[0])) {
+          anchor.anchor = { type: c[0], soil: c[1], tension: pfNum(c[2]), holding: pfNum(c[3]), load: pfNum(c[4]), rod: c[5] || '', rodStrength: pfNum(c[6]), rodLoad: pfNum(c[7]) };
+          continue;
+        }
+      }
+      if (sec === 'equipment') {
+        if (c[1] === 'Attach (in)') { equipCat = c[0]; continue; }
+        if (equipCat && c.length >= 3 && pfNum(c[1]) != null) { ro.equipment.push({ cat: equipCat, name: c[0], attach: pfNum(c[1]), weight: pfNum(c[2]), dir: pfNum(c[3]) }); continue; }
+      }
+      if (sec === 'nesc') {
+        if (/^(Pole|Guy|Crossarm|Anchor)$/.test(c[0]) && c.length >= 5) { ro.nesc[c[0]] = { tension: pfNum(c[1]), wind: pfNum(c[2]), vertical: pfNum(c[3]), sf: pfNum(c[4]) }; continue; }
+      }
+    }
+  });
+  // fill top-level from first rule
+  const first = R.rules[R.ruleOrder[0]];
+  if (first) { const h = first.head; R.label = R.label || h.label || ''; R.poleSpec = R.poleSpec || h.poleSpec || ''; R.species = R.species || h.species || ''; R.grade = R.grade || h.grade || ''; R.district = R.district || h.district || ''; R.edition = R.edition || h.edition || ''; }
+  return R;
+}
+
+
+</script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const natural = (a,b) => String(a).localeCompare(String(b),undefined,{numeric:true});
+const f1 = n => n==null ? '–' : (Math.round(n*10)/10).toLocaleString('en-US');
+const f0 = n => n==null ? '–' : Math.round(n).toLocaleString('en-US');
+try { if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; } catch(e){}
+
+/* ---------- settings ---------- */
+const DEF = {poleWarn:80, poleFail:85, eqWarn:98, eqFail:100, lead:0.5, commSep:40, spanFt:2, spanPct:1, ang:5, hag250c:60};
+let S = {...DEF};
+try { Object.assign(S, JSON.parse(localStorage.getItem('pfreview:settings')||'{}')); delete S.warn; delete S.fail; } catch(e){}
+const saveS = () => { try{ localStorage.setItem('pfreview:settings', JSON.stringify(S)); }catch(e){} };
+
+/* ---------- storage (IndexedDB) ---------- */
+let DBP = null;
+function db(){ if (DBP) return DBP; DBP = new Promise((res,rej)=>{ try{ const r=indexedDB.open('pfreview',1); r.onupgradeneeded=()=>r.result.createObjectStore('files',{keyPath:'id'}); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);}catch(e){rej(e);} }); return DBP; }
+async function dbAll(){ try{ const d=await db(); return await new Promise((res,rej)=>{ const q=d.transaction('files').objectStore('files').getAll(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>rej(q.error); }); }catch(e){ return []; } }
+async function dbPut(rec){ try{ const d=await db(); await new Promise((res,rej)=>{ const t=d.transaction('files','readwrite'); t.objectStore('files').put(rec); t.oncomplete=res; t.onerror=()=>rej(t.error); }); }catch(e){} }
+async function dbDel(id){ try{ const d=await db(); await new Promise((res)=>{ const t=d.transaction('files','readwrite'); id==null?t.objectStore('files').clear():t.objectStore('files').delete(id); t.oncomplete=res; t.onerror=res; }); }catch(e){} }
+
+/* ---------- state ---------- */
+let POLES = [];   // records {id,fileName,bytes,R,img:{d3,polar},pf:{key:status}}
+let ISS = [];     // issues
+let CONN = [];    // span connections
+let TAB = 'poles', CUR = null;
+const SORT = {};
+let FIL = {status:'', rules:'', q:'', review:false};
+const shownPoles = () => FIL.review ? POLES.filter(p=>p._status!=='ok') : POLES;
+
+/* ---------- reading ---------- */
+function classify(ctx, x, y, sc){
+  const x0=Math.max(0,Math.round((x-17)*sc)), y0=Math.max(0,Math.round((y-13)*sc)), w=Math.round(16*sc), h=Math.round(15*sc);
+  let d; try { d = ctx.getImageData(x0,y0,w,h).data; } catch(e){ return ''; }
+  let g=0,a=0,r=0;
+  for (let i=0;i<d.length;i+=4){ const R=d[i],G=d[i+1],B=d[i+2];
+    if (G>120 && G>R+30 && G>B+20) g++; else if (R>200 && G>120 && G<225 && B<110) a++; else if (R>170 && G<110 && B<110) r++; }
+  const mx=Math.max(g,a,r); if (mx<6) return '';
+  return mx===r?'fail':mx===a?'warn':'pass';
+}
+async function readPdf(file, onStep){
+  if (!window.pdfjsLib) throw new Error('The PDF reader library did not load. Check your connection and reload.');
+  const bytes = await file.arrayBuffer();
+  const doc = await pdfjsLib.getDocument({data:new Uint8Array(bytes.slice(0))}).promise;
+  const pages = [];
+  for (let i=1;i<=doc.numPages;i++){ onStep && onStep(`Reading page ${i} of ${doc.numPages}`); const p=await doc.getPage(i); const vp=p.getViewport({scale:1}); pages.push({pageNo:i, lines:pfPageLines((await p.getTextContent()).items, vp.transform, pdfjsLib.Util.transform)}); }
+  const R = pfParse(pages);
+  if (!R.ruleOrder.length) throw new Error('This does not look like an IKE PoleForeman loading report.');
+  const imgPage = R.summaryPage || (R.rules[R.ruleOrder[0]]||{}).firstPage || 1;
+  const need = [...new Set([imgPage, ...R.statusTargets.map(t=>t.page)])];
+  const pf = {}, img = {};
+  const sc = 2;
+  for (const pn of need){
+    onStep && onStep(`Checking status icons, page ${pn}`);
+    const p = await doc.getPage(pn), vp = p.getViewport({scale:sc});
+    const cv = document.createElement('canvas'); cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
+    const ctx = cv.getContext('2d', {willReadFrequently:true}); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height);
+    await p.render({canvasContext:ctx, viewport:vp}).promise;
+    R.statusTargets.filter(t=>t.page===pn).forEach(t=>{ const c=classify(ctx,t.x,t.y,sc); if (c) pf[t.key]=c; });
+    if (pn===imgPage){
+      const crop = (fx0,fy0,fx1,fy1,q) => { const W=cv.width,H=cv.height; const c2=document.createElement('canvas'); c2.width=Math.round((fx1-fx0)*W); c2.height=Math.round((fy1-fy0)*H); c2.getContext('2d').drawImage(cv, fx0*W, fy0*H, c2.width, c2.height, 0,0,c2.width,c2.height); return c2.toDataURL('image/jpeg', q); };
+      img.d3 = crop(0.422,0.394,0.99,0.744,0.85);
+      img.polar = crop(0.055,0.35,0.405,0.86,0.8);
+    }
+  }
+  const id = R.label || file.name;
+  return {id, fileName:file.name, bytes, R, pf, img, added:Date.now()};
+}
+async function handleFiles(files){
+  files=[...files].filter(Boolean); if(!files.length) return;
+  if ($('#app').hidden) $('#fileList').innerHTML='';
+  else { $('#empty').hidden=false; $('#app').hidden=true; $('#fileList').innerHTML=''; }
+  let ok=0; const bad=[];
+  for (const f of files.sort((a,b)=>natural(a.name,b.name))){
+    const li=document.createElement('li'); li.innerHTML=`<span>${esc(f.name)}</span><span>Waiting</span>`; $('#fileList').appendChild(li); const st=li.lastChild;
+    if (!/\.pdf$/i.test(f.name)){ st.textContent='Not a PDF'; st.className='e'; bad.push(f.name); continue; }
+    try {
+      const rec = await readPdf(f, s=>st.textContent=s);
+      const dup = POLES.findIndex(p=>p.id===rec.id);
+      if (dup>=0){ POLES[dup]=rec; st.textContent=`${rec.id} replaced`; } else { POLES.push(rec); st.textContent=`${rec.id}, ${rec.R.ruleOrder.join(' + ')}`; }
+      st.className='g'; ok++; dbPut(rec);
+    } catch(e){ console.error(e); st.textContent=e.message||'Could not read'; st.className='e'; bad.push(f.name); }
+  }
+  if (POLES.length){ rebuild(); toast(bad.length?`${ok} added. ${bad.length} skipped: ${bad.join(', ')}`:`Added ${ok} report${ok===1?'':'s'}`); }
+}
+const drop=$('#drop');
+$('#pick').onclick=()=>$('#file').click(); $('#addMore').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{ const fs=[...e.target.files]; e.target.value=''; handleFiles(fs); };
+['dragenter','dragover'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault(); drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault(); if(ev==='drop'||e.target===document.documentElement) drop.classList.remove('over');}));
+document.addEventListener('drop',e=>{ const fs=e.dataTransfer?.files; if(fs&&fs.length) handleFiles(fs); });
+$('#clearAll').onclick=async()=>{ if(!confirm('Remove all loaded reports?')) return; POLES=[]; CUR=null; await dbDel(null); $('#empty').hidden=false; $('#app').hidden=true; $('#addMore').hidden=$('#clearAll').hidden=true; $('#fileList').innerHTML=''; };
+dbAll().then(recs=>{ if (recs.length){ const b=$('#restore'); b.hidden=false; b.textContent=`Reopen last session (${recs.length} pole${recs.length>1?'s':''})`; b.onclick=()=>{ POLES=recs; rebuild(); }; } });
+$('#themeBtn').onclick=()=>{ const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'); const n=cur==='dark'?'light':'dark'; document.documentElement.dataset.theme=n; try{localStorage.setItem('pfreview:theme',n);}catch(e){} };
+try{ const t=localStorage.getItem('pfreview:theme'); if(t) document.documentElement.dataset.theme=t; }catch(e){}
+
+/* ---------- derived values ---------- */
+const specOf = s => { const m=String(s||'').match(/^(\d+)\s*\/\s*([A-Z]?\d+|H\d+)/i); return m?{len:+m[1], cls:m[2].toUpperCase()}:{len:null,cls:''}; };
+function metrics(r){
+  const ph = r.spans.flatMap(s=>s.wires.flatMap(w=>w.phases.map(p=>({...p, span:s.n, kind:w.kind}))));
+  const mx = (arr) => arr.filter(x=>x!=null).reduce((a,b)=>Math.max(a,b), -Infinity);
+  const fr = mx(ph.flatMap(p=>[p.bracketLoad,p.supportLoad,p.insLoad]));
+  const gw = r.anchors.flatMap(a=>a.wires.flatMap(w=>[w.load,w.insLoad]));
+  const an = r.anchors.flatMap(a=>a.anchor?[a.anchor.load,a.anchor.rodLoad]:[]);
+  return { horz:r.head.horz, vert:r.head.vert, framing: fr===-Infinity?null:fr, guy: gw.length?mx(gw):null, anchor: an.length?mx(an):null };
+}
+const TH = k => k==='pole' ? [S.poleWarn, S.poleFail] : [S.eqWarn, S.eqFail];
+const lv = (p, k) => { if (p==null) return ''; const [w,f]=TH(k); return p>f ? 'bad' : p>w ? 'warn' : ''; };
+const pctHtml = (p, k) => p==null ? '<span class="muted">–</span>' : `<span class="pct ${lv(p,k)}">${f0(p)}%</span>`;
+const meter = (p, c, k) => p==null ? '<span class="muted">–</span>' : `<div class="meter"><div class="tr"><i class="${lv(p,k)||c||''}" style="width:${Math.min(p,100)}%"></i></div><span class="pct ${lv(p,k)}">${f0(p)}%</span></div>`;
+const ruleOf = (P,r) => P.R.rules[r];
+
+/* ---------- checks ---------- */
+function runChecks(){
+  ISS = [];
+  const add = (P, sev, cat, title, detail, rule) => ISS.push({pole:P?P.id:'Project', sev, cat, title, detail:detail||'', rule:rule||''});
+  const sorted = POLES.slice().sort((a,b)=>natural(a.id,b.id));
+  // majority values
+  const maj = (fn) => { const m={}; sorted.forEach(P=>{ const v=fn(P); if(v) m[v]=(m[v]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]?.[0]; };
+  const majSw = maj(P=>P.R.sw&&`${P.R.sw} / DB ${P.R.db}`), majEd = maj(P=>P.R.edition), majGr = maj(P=>P.R.grade), majDi = maj(P=>P.R.district);
+  const primVolt = P => { const r=P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]]; const v=r.spans.flatMap(s=>s.wires.filter(w=>/primary/i.test(w.kind)).flatMap(w=>w.phases.map(p=>(p.insulator.match(/(\d+)\s*KV/i)||[])[1]))).filter(Boolean); return v; };
+  const voltCount = {}; sorted.forEach(P=>primVolt(P).forEach(v=>voltCount[v]=(voltCount[v]||0)+1));
+  const majVolt = Object.entries(voltCount).sort((a,b)=>b[1]-a[1])[0]?.[0];
+  sorted.forEach(P=>{
+    const R = P.R;
+    // file name vs label vs rules
+    const fnLabel = (P.fileName.match(/^([A-Za-z]*\d+[A-Za-z]?)_/)||[])[1];
+    if (fnLabel && R.label && fnLabel.toUpperCase()!==R.label.toUpperCase()) add(P,'bad','Report','File name and pole label disagree',`File ${P.fileName} but the report is labeled ${R.label}.`);
+    const fnRules = (P.fileName.match(/250[A-Z]/g)||[]);
+    fnRules.forEach(r=>{ if (!R.rules[r]) add(P,'bad','Report',`File name says ${r} but the report has no ${r} analysis`,P.fileName); });
+    if (!R.rules['250B']) add(P,'bad','Report','No 250B analysis in this report','');
+    if (!R.rules['250C']) add(P,'info','Report','250B only','No 250C extreme-wind analysis in this report.');
+    // PoleForeman icon status
+    Object.entries(P.pf||{}).forEach(([k,v])=>{ if (v==='pass') return; const [a,b,c]=k.split('|'); const what = a==='summary'?`summary ${b} ${c}`:b==='comp'?`${c}${c==='Overall'?' pole':''}`:`${b} ${c}`; add(P, v==='fail'?'bad':'warn','PoleForeman',`PoleForeman marks ${what} ${v==='fail'?'failing':'as a warning'}`, a==='summary'?'':`${a} analysis`, a==='summary'?b:a); });
+    // HAG
+    const sp = specOf(R.poleSpec);
+    R.ruleOrder.forEach(rn=>{
+      const r = R.rules[rn], h = r.head, m = metrics(r);
+      const L = (v, what, detail, k) => { if (v==null) return; const [w,f]=TH(k); if (v>f) add(P,'bad','Loading',`${what} at ${f0(v)}%, over the ${f}% ${k==='pole'?'pole':'equipment'} limit`,detail,rn); else if (v>w) add(P,'warn','Loading',`${what} at ${f0(v)}%, above the preferred ${w}%`,detail,rn); };
+      L(h.horz,'Pole horizontal loading','', 'pole'); L(h.vert,'Pole vertical loading','', 'pole');
+      r.spans.forEach(s=>s.wires.forEach(w=>w.phases.forEach(p=>{ const d=`Span ${s.n}, ${w.kind} ${p.phase}`; L(p.bracketLoad,`Bracket (${p.bracket})`,d); L(p.supportLoad,`Insulator support (${p.support})`,d); L(p.insLoad,`Insulator (${p.insulator})`,d); })));
+      r.anchors.forEach(a=>{
+        a.wires.forEach((w,i)=>{ const d=`Anchor ${a.n}, guy ${i+1} (${w.size} at ${w.attach} in)`; L(w.load,'Guy wire',d); L(w.insLoad,`Guy insulator (${w.insulator})`,d);
+          if (w.strength && w.tension!=null && w.load!=null && Math.abs(w.tension/w.strength*100-w.load)>1.5) add(P,'bad','Math',`Guy wire %loading doesn't match tension ÷ strength`,`${d}: ${f0(w.tension)} ÷ ${f0(w.strength)} = ${f1(w.tension/w.strength*100)}%, report shows ${w.load}%`,rn);
+          if (w.insStrength && w.tension!=null && w.insLoad!=null && Math.abs(w.tension/w.insStrength*100-w.insLoad)>1.5) add(P,'bad','Math',`Guy insulator %loading doesn't match`,`${d}: ${f0(w.tension)} ÷ ${f0(w.insStrength)} = ${f1(w.tension/w.insStrength*100)}%, report shows ${w.insLoad}%`,rn);
+        });
+        if (a.anchor){ const an=a.anchor, d=`Anchor ${a.n} (${an.type}, ${an.rod})`; L(an.load,'Anchor holding',d); L(an.rodLoad,'Anchor rod',d);
+          const sum = a.wires.reduce((x,w)=>x+(w.tension||0),0);
+          if (a.wires.length && Math.abs(sum-an.tension)>Math.max(25, an.tension*0.01)) add(P,'bad','Math','Anchor tension ≠ sum of its guy wires',`${d}: guys total ${f0(sum)} lbs, anchor shows ${f0(an.tension)} lbs`,rn);
+          if (an.holding && Math.abs(an.tension/an.holding*100-an.load)>1.5) add(P,'bad','Math','Anchor %loading doesn\u2019t match tension ÷ holding strength',`${d}: ${f1(an.tension/an.holding*100)}% vs ${an.load}%`,rn);
+          if (an.rodStrength && an.rodLoad!=null && Math.abs(an.tension/an.rodStrength*100-an.rodLoad)>1.5) add(P,'bad','Math','Rod %loading doesn\u2019t match tension ÷ rod strength',`${d}: ${f1(an.tension/an.rodStrength*100)}% vs ${an.rodLoad}%`,rn);
+        } else add(P,'warn','Guying',`Anchor ${a.n} has guy wires but no anchor data`,'',rn);
+        // lead ratio
+        if (sp.len && h.setting && a.wires.length){ const hag=sp.len-h.setting; const top=Math.min(...a.wires.map(w=>w.attach||0)); const ht=hag-top/12; const ratio=a.lead/ht; a._ratio=ratio; a._ht=ht; if (ratio<S.lead) add(P,'warn','Guying',`Short guy lead on anchor ${a.n} (lead:height ${ratio.toFixed(2)})`,`${f1(a.lead)} ft lead to a guy about ${f1(ht)} ft above ground (limit ${S.lead}).`,rn); }
+      });
+      // spans
+      r.spans.forEach(s=>{ if (!s.wires.length && !s.comms.length) add(P,'warn','Spans',`Span ${s.n} has no conductors or cables`,`${s.length}' at ${s.bearing}°. Leftover span, or wires not assigned?`,rn); });
+      // NESC factors
+      const ex = rn==='250B' && /Grade C/i.test(h.grade||R.grade) ? {Pole:[1.3,1.75,1.9,0.85], Guy:[1.3,1.75,1.5,0.9]} : rn==='250C' ? {Pole:[1,1,1,0.75], Guy:[1,1,1,0.9]} : null;
+      if (ex) Object.entries(ex).forEach(([o,v])=>{ const n=r.nesc[o]; if(!n){ add(P,'warn','NESC',`${o} load factors missing`,'',rn); return; } const got=[n.tension,n.wind,n.vertical,n.sf]; const labels=['tension','wind','vertical','strength factor']; got.forEach((g,i)=>{ if (g!==v[i]) add(P,'bad','NESC',`${o} ${labels[i]} factor is ${g}, expected ${v[i]}`,`${rn}, ${h.grade||R.grade}`,rn); }); });
+      // district conditions
+      if (rn==='250B'){ const D={Light:{temp:30,wind:9,ice:0},Medium:{temp:15,wind:4,ice:0.25},Heavy:{temp:0,wind:4,ice:0.5}}[(h.district||'').trim()];
+        if (D){ if (h.temp!==D.temp) add(P,'bad','NESC',`${h.district} district temperature is ${h.temp}°, expected ${D.temp}°`,'',rn); if (h.wind!==D.wind) add(P,'bad','NESC',`${h.district} district wind is ${h.wind} psf, expected ${D.wind} psf`,'',rn); if ((h.ice||0)!==D.ice) add(P,'bad','NESC',`${h.district} district ice is ${h.ice}", expected ${D.ice}"`,'',rn); } }
+      if (h.strength!=null && h.strength<100) add(P,'info','Pole',`Pole strength remaining ${h.strength}%`,'Deterioration was applied in this analysis.',rn);
+      // setting depth
+      if (sp.len && h.setting!=null && h.setting < sp.len*0.1+2-0.01) add(P,'warn','Pole',`Setting depth ${h.setting}' is shallower than 10% + 2' (${f1(sp.len*0.1+2)}')`,R.poleSpec,rn);
+      // dead ends with no guys
+      const de = r.spans.some(s=>s.wires.some(w=>!/secondary|service/i.test(w.kind) && w.phases.some(p=>/dead\s*end|\bDE\b/i.test(p.insulator+' '+p.bracket))));
+      if (de && !r.anchors.length) add(P,'warn','Guying','Dead-end hardware with no guying modeled','Confirm the dead-end tension is balanced.',rn);
+      // comm separation
+      const powerAtt = r.spans.flatMap(s=>s.wires.filter(w=>!/neutral/i.test(w.kind)&&!/secondary|service/i.test(w.kind)).flatMap(w=>w.phases.map(p=>p.attach)));
+      const commAtt = r.spans.flatMap(s=>s.comms.map(c=>c.attach));
+      if (powerAtt.length && commAtt.length){ const sep=Math.min(...commAtt)-Math.max(...powerAtt); if (sep<S.commSep) add(P,'warn','Clearance',`Comm is ${f0(sep)} in below the lowest primary at the pole`,`Limit set to ${S.commSep} in.`,rn); }
+      // summary vs detail
+      const sr = R.summary.find(x=>x.rule===rn);
+      if (sr){ [['poleH',h.horz,'Pole H'],['poleV',h.vert,'Pole V'],['framings',m.framing,'Framings'],['guying',m.guy,'Guying']].forEach(([k,v,lab])=>{ if (sr[k]!=null && v!=null && Math.abs(sr[k]-v)>1) add(P,'bad','Report',`Summary page ${lab} (${sr[k]}%) doesn't match the ${rn} detail (${f0(v)}%)`,'',rn); });
+        if (sr.temp!=null && h.temp!=null && sr.temp!==h.temp) add(P,'bad','Report',`Summary temperature ${sr.temp}° vs detail ${h.temp}°`,'',rn); }
+    });
+    // HAG / 250C applicability
+    const b = R.rules['250B'];
+    if (sp.len && b && b.head.setting!=null){ const hag=sp.len-b.head.setting; P._hag=hag; if (hag>S.hag250c && !R.rules['250C']) add(P,'warn','NESC',`Pole is ${f1(hag)} ft above ground with no 250C analysis`,`NESC 250C extreme wind applies to structures over ${S.hag250c} ft.`); }
+    // 250B vs 250C consistency
+    const c = R.rules['250C'];
+    if (b && c){
+      const diff = (what, x, y) => { if (String(x)!==String(y)) add(P,'bad','250B vs 250C',`${what} differs between 250B and 250C`,`250B: ${x} · 250C: ${y}`); };
+      diff('Pole', b.head.poleSpec, c.head.poleSpec); diff('Setting depth', b.head.setting, c.head.setting); diff('Soil', b.head.soil, c.head.soil);
+      diff('Location', `${b.head.lat}, ${b.head.lon}`, `${c.head.lat}, ${c.head.lon}`);
+      diff('Number of spans', b.spans.length, c.spans.length); diff('Number of anchors', b.anchors.length, c.anchors.length); diff('Equipment count', b.equipment.length, c.equipment.length);
+      b.spans.forEach(s=>{ const t=c.spans.find(x=>x.n===s.n); if(!t) return; diff(`Span ${s.n} length/bearing`, `${s.length}' @ ${s.bearing}°`, `${t.length}' @ ${t.bearing}°`);
+        s.wires.forEach((w,i)=>{ const u=t.wires[i]; if(!u){ add(P,'bad','250B vs 250C',`Span ${s.n} ${w.kind} missing from 250C`,''); return; } diff(`Span ${s.n} ${w.kind} conductor`, w.conductor, u.conductor);
+          w.phases.forEach((p,j)=>{ const q=u.phases[j]; if(!q) return; if (p.attach!==q.attach||p.offset!==q.offset) diff(`Span ${s.n} ${w.kind} ${p.phase} attachment`, `${p.attach}/${p.offset} in`, `${q.attach}/${q.offset} in`); if (p.bracket!==q.bracket) diff(`Span ${s.n} ${w.kind} ${p.phase} bracket`, p.bracket, q.bracket); if (p.insulator!==q.insulator) diff(`Span ${s.n} ${w.kind} ${p.phase} insulator`, p.insulator, q.insulator); });
+          if (u.tension!=null && w.tension!=null && u.tension<w.tension) add(P,'warn','250B vs 250C',`Span ${s.n} ${w.kind} design tension is lower under 250C`,`250B ${f0(w.tension)} lbs · 250C ${f0(u.tension)} lbs`);
+        });
+        s.comms.forEach((m,i)=>{ const n=t.comms[i]; if(n && m.attach!==n.attach) diff(`Span ${s.n} comm attachment`, m.attach, n.attach); });
+      });
+      b.anchors.forEach(a=>{ const d=c.anchors.find(x=>x.n===a.n); if(!d) return; diff(`Anchor ${a.n} lead/bearing`, `${a.lead}' @ ${a.bearing}°`, `${d.lead}' @ ${d.bearing}°`); diff(`Anchor ${a.n} guy sizes`, a.wires.map(w=>w.size+'@'+w.attach).join(', '), d.wires.map(w=>w.size+'@'+w.attach).join(', ')); if (a.anchor&&d.anchor) diff(`Anchor ${a.n} type`, a.anchor.type+' / '+a.anchor.rod, d.anchor.type+' / '+d.anchor.rod); });
+      const mb=metrics(b), mc=metrics(c);
+      if (mb.horz!=null && mc.horz!=null && mc.horz < mb.horz) add(P,'info','250B vs 250C','250C horizontal loading is lower than 250B',`250B ${mb.horz}% · 250C ${mc.horz}%`);
+    }
+    // project consistency
+    if (majSw && R.sw && `${R.sw} / DB ${R.db}`!==majSw) add(P,'warn','Project',`Run on a different software/database version`,`${R.sw} / DB ${R.db} vs project ${majSw}`);
+    if (majEd && R.edition && R.edition!==majEd) add(P,'warn','Project',`NESC edition ${R.edition} differs from the project (${majEd})`,'');
+    if (majGr && R.grade && R.grade!==majGr) add(P,'warn','Project',`Grade differs from the project`,`${R.grade} vs ${majGr}`);
+    if (majDi && R.district && R.district!==majDi) add(P,'warn','Project',`Loading district differs from the project`,`${R.district} vs ${majDi}`);
+    const pv = [...new Set(primVolt(P))];
+    if (majVolt && pv.length && pv.some(v=>+v < +majVolt)) add(P,'warn','Framing',`Primary insulators rated ${pv.filter(v=>+v<+majVolt).join('/')} kV on a line that is mostly ${majVolt} kV`,'Confirm the insulator selection.');
+  });
+  // span connections from coordinates
+  const base = P => P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]];
+  const xy = P => { const h=base(P).head; return (h.lat==null||h.lon==null)?null:{y:h.lat*364000, x:h.lon*364000*Math.cos(h.lat*Math.PI/180)}; };
+  const normC = s => String(s||'').replace(/\.\.\.$/,'').trim();
+  const sameC = (a,b) => { a=normC(a); b=normC(b); return a===b || a.startsWith(b) || b.startsWith(a); };
+  const angd = (a,b) => { const d=Math.abs(((a-b)%360+360)%360); return d>180?360-d:d; };
+  CONN = [];
+  sorted.forEach(A=>{ const pa=xy(A); base(A).spans.forEach(s=>{
+    let best=null;
+    if (pa) sorted.forEach(B=>{ if (B===A) return; const pb=xy(B); if(!pb) return; const dx=pb.x-pa.x, dy=pb.y-pa.y, dist=Math.hypot(dx,dy), brg=(Math.atan2(dx,dy)*180/Math.PI+360)%360; const ad=angd(brg,s.bearing); if (ad<=S.ang && dist<=s.length*1.35 && (!best||Math.abs(dist-s.length)<Math.abs(best.dist-s.length))) best={B,dist,brg,ad}; });
+    CONN.push({A, s, B:best?best.B:null, dist:best?best.dist:null, ad:best?best.ad:null});
+  }); });
+  const tolOf = L => Math.max(S.spanFt, L*S.spanPct/100);
+  CONN.forEach(c=>{
+    if (!c.B) { c.state='open'; return; }
+    const back = base(c.B).spans.map(t=>({t, d:angd(t.bearing, c.s.bearing+180)})).filter(x=>x.d<=S.ang).sort((x,y)=>x.d-y.d)[0];
+    c.t = back ? back.t : null;
+    if (Math.abs(c.dist-c.s.length) > tolOf(c.s.length)) { c.state='gps'; add(c.A,'warn','Line',`Span ${c.s.n} toward ${c.B.id} is ${f1(c.s.length)}' but the poles are ${f1(c.dist)}' apart`,'Distance from the report coordinates.'); }
+    if (!c.t) { c.state='noback'; add(c.A,'warn','Line',`${c.B.id} has no span pointing back at ${c.A.id}`,`${c.A.id} span ${c.s.n} runs ${c.s.bearing}° toward ${c.B.id}; none of ${c.B.id}'s spans run near ${f0((c.s.bearing+180)%360)}°.`); return; }
+    c.state = c.state || 'ok';
+    if (natural(c.A.id,c.B.id)>0) return; // report each pair once
+    const dl=Math.abs(c.s.length-c.t.length);
+    if (dl>tolOf(Math.max(c.s.length,c.t.length))) { c.state='len'; add(c.A,'warn','Line',`Span to ${c.B.id} is ${f1(c.s.length)}' here but ${f1(c.t.length)}' on ${c.B.id}`,`${c.A.id} span ${c.s.n} / ${c.B.id} span ${c.t.n}, ${f1(dl)} ft apart.`); }
+    const miss = c.s.wires.filter(w=>!c.t.wires.some(u=>u.kind===w.kind&&sameC(u.conductor,w.conductor))).concat(c.t.wires.filter(u=>!c.s.wires.some(w=>w.kind===u.kind&&sameC(u.conductor,w.conductor))));
+    if (miss.length) { c.state='cond'; add(c.A,'warn','Line',`Conductors on the span to ${c.B.id} don't match ${c.B.id}'s side`,`${c.A.id}: ${c.s.wires.map(w=>w.kind+' '+w.conductor).join(', ')||'none'} · ${c.B.id}: ${c.t.wires.map(w=>w.kind+' '+w.conductor).join(', ')||'none'}`); }
+    else c.s.wires.forEach(w=>{ const u=c.t.wires.find(x=>x.kind===w.kind&&sameC(x.conductor,w.conductor)); if (u && (u.tension!==w.tension||u.ruling!==w.ruling)) add(c.A,'info','Line',`${w.kind} ruling span / design tension differs from ${c.B.id}`,`${c.A.id}: ${w.ruling}' / ${f0(w.tension)} lbs · ${c.B.id}: ${u.ruling}' / ${f0(u.tension)} lbs`); });
+    if (c.s.comms.length!==c.t.comms.length) add(c.A,'warn','Line',`Comm cable count on the span to ${c.B.id} doesn't match`,`${c.A.id}: ${c.s.comms.length} · ${c.B.id}: ${c.t.comms.length}`);
+  });
+  const opens = CONN.filter(c=>c.state==='open');
+  if (opens.length) add(null,'info','Line',`${opens.length} spans end at poles that aren't in this set`,opens.map(c=>`${c.A.id} span ${c.s.n} (${c.s.length}' at ${c.s.bearing}°)`).join(', '));
+  // label gaps / duplicates
+  const nums = sorted.map(P=>({P, m:String(P.id).match(/^(.*?)(\d+)$/)})).filter(x=>x.m);
+  for (let i=0;i<nums.length-1;i++){ const a=nums[i], b=nums[i+1]; if (a.m[1]===b.m[1] && +b.m[2]-+a.m[2]>1) add(null,'info','Project',`Pole labels skip from ${a.P.id} to ${b.P.id}`,'Missing report, or intentionally skipped?'); }
+  const noOwner = sorted.filter(P=>P.R.ruleOrder.some(r=>P.R.rules[r].spans.some(s=>s.comms.some(c=>!c.owner)))).length;
+  if (noOwner) add(null,'info','Project',`Communication cables have no owner on ${noOwner} pole${noOwner>1?'s':''}`,'The Owner column is blank.');
+  // per pole status
+  POLES.forEach(P=>{ const is=ISS.filter(x=>x.pole===P.id); P._status = is.some(x=>x.sev==='bad')?'bad':is.some(x=>x.sev==='warn')?'warn':'ok'; P._counts={bad:is.filter(x=>x.sev==='bad').length,warn:is.filter(x=>x.sev==='warn').length,info:is.filter(x=>x.sev==='info').length}; });
+}
+
+/* ---------- render ---------- */
+function rebuild(){
+  POLES.sort((a,b)=>natural(a.id,b.id));
+  runChecks();
+  if (!CUR || !POLES.find(p=>p.id===CUR)) CUR = POLES[0]?.id;
+  $('#empty').hidden=true; $('#app').hidden=false; $('#addMore').hidden=$('#clearAll').hidden=false;
+  const opco=[...new Set(POLES.map(p=>p.R.opco).filter(Boolean))].join(', ');
+  $('#hTitle').textContent = `${POLES.length} pole${POLES.length>1?'s':''}, ${POLES[0].id}${POLES.length>1?` to ${POLES[POLES.length-1].id}`:''}`;
+  const dts=POLES.map(p=>p.R.date).filter(Boolean).sort();
+  $('#hSub').textContent = [opco, POLES[0].R.edition&&`NESC ${POLES[0].R.edition}`, POLES[0].R.grade, POLES[0].R.district&&`${POLES[0].R.district} district`, dts.length&&`analyzed ${dts[0].split(' ')[0]}${dts[0].split(' ')[0]!==dts[dts.length-1].split(' ')[0]?' to '+dts[dts.length-1].split(' ')[0]:''}`].filter(Boolean).join(' · ');
+  renderKpis(); render();
+}
+function renderKpis(){
+  const n=POLES.length, c=s=>POLES.filter(p=>p._status===s).length;
+  const both=POLES.filter(p=>p.R.rules['250C']).length;
+  const hmax = POLES.map(p=>({p, v:Math.max(...p.R.ruleOrder.map(r=>p.R.rules[r].head.horz||0)), r:p.R.ruleOrder.reduce((a,r)=>(p.R.rules[r].head.horz||0)>(p.R.rules[a].head.horz||0)?r:a, p.R.ruleOrder[0])})).sort((a,b)=>b.v-a.v)[0];
+  const gmax = POLES.map(p=>({p, v:Math.max(-1,...p.R.ruleOrder.map(r=>metrics(p.R.rules[r]).guy??-1))})).sort((a,b)=>b.v-a.v)[0];
+  const footage = CONN.reduce((a,c)=> a + ((!c.B || natural(c.A.id,c.B.id)<0 || !c.t) ? c.s.length : 0), 0);
+  const k=[
+    [n,'Poles',`${both} with 250C, ${n-both} 250B only`,''],
+    [c('bad'),'Need attention','errors or over limit',c('bad')?'bad':'ok'],
+    [c('warn'),'Review','warnings',c('warn')?'warn':''],
+    [c('ok'),'Clean','no errors or warnings','ok'],
+    [hmax?`${hmax.v}%`:'–','Highest pole loading',hmax?`${hmax.p.id}, ${hmax.r} horizontal`:'',hmax?lv(hmax.v,'pole'):''],
+    [gmax&&gmax.v>=0?`${gmax.v}%`:'–','Highest guy loading',gmax&&gmax.v>=0?gmax.p.id:'no guys',gmax?lv(gmax.v):''],
+    [footage?`${f0(footage)}'`:'–','Span footage',`${CONN.filter(c=>c.B&&c.t).length/2|0} pole-to-pole spans`,''],
+  ];
+  $('#kpis').innerHTML=k.map((x,i)=>`<div class="kpi">${(i===1||i===2)&&x[0]?`<button class="kpib" data-gotoreview="1" title="Show poles that need review">`:''}<div class="v ${x[3]}">${x[0]}</div><div class="l">${x[1]}</div><div class="d">${esc(x[2])}</div>${(i===1||i===2)&&x[0]?'</button>':''}</div>`).join('');
+  const nr = POLES.filter(p=>p._status!=='ok').length;
+  $('#reviewBtn').hidden = false; $('#reviewBtn').textContent = nr ? `Review ${nr} pole${nr>1?'s':''}` : 'No poles need review'; $('#reviewBtn').disabled = !nr;
+}
+const TABS=[['poles','Poles'],['compare','Compare'],['spans','Spans'],['guying','Guying'],['equipment','Equipment & new work'],['issues','Issues'],['settings','Settings']];
+function render(){
+  const cnt={poles:POLES.length, issues:ISS.filter(i=>i.sev!=='info').length, guying:POLES.reduce((a,p)=>a+(p.R.rules['250B']||p.R.rules[p.R.ruleOrder[0]]).anchors.length,0)};
+  $('#tabs').innerHTML=TABS.map(([k,l])=>`<button class="tab" role="tab" data-tab="${k}" aria-selected="${TAB===k}">${l}${cnt[k]!=null?`<span class="n">${cnt[k]}</span>`:''}</button>`).join('');
+  const v=$('#view');
+  v.innerHTML = TAB==='poles'?renderPoles():TAB==='compare'?renderCompare():TAB==='spans'?renderSpans():TAB==='guying'?renderGuying():TAB==='equipment'?renderEquip():TAB==='issues'?renderIssues():renderSettings();
+}
+$('#tabs').addEventListener('click',e=>{ const b=e.target.closest('[data-tab]'); if(b){ TAB=b.dataset.tab; render(); } });
+const statusPill = s => s==='bad'?'<span class="pill bad">Attention</span>':s==='warn'?'<span class="pill warn">Review</span>':'<span class="pill ok">Clean</span>';
+const pfPill = v => v==='fail'?'<span class="pill bad">✕ PF fail</span>':v==='warn'?'<span class="pill warn">! PF warning</span>':v==='pass'?'<span class="pill ok">✓ PF pass</span>':'<span class="pill none">not shown</span>';
+
+function reviewToggle(){
+  const n = POLES.filter(p=>p._status!=='ok').length;
+  return `<div class="seg" role="group" aria-label="Which poles"><button data-review="0" aria-pressed="${!FIL.review}">All poles (${POLES.length})</button><button data-review="1" aria-pressed="${FIL.review}">Needs review (${n})</button></div>`;
+}
+function renderPoles(){
+  const list0 = shownPoles();
+  if (!list0.find(p=>p.id===CUR)) CUR = list0[0]?.id;
+  const P = POLES.find(p=>p.id===CUR);
+  const list = list0.map(p=>{ const hb=p.R.rules['250B']?.head.horz, hc=p.R.rules['250C']?.head.horz;
+    return `<button class="pcard" data-pole="${esc(p.id)}" aria-current="${p.id===CUR}"><span class="dot ${p._status}"></span><b>${esc(p.id)}</b><span class="h">${hb!=null?`<span class="pct ${lv(hb,'pole')}">B ${hb}%</span>`:''}${hc!=null?` · <span class="pct ${lv(hc,'pole')}" style="color:var(--c)">C ${hc}%</span>`:''}</span><span class="spec">${esc(p.R.poleSpec)} · ${p.R.ruleOrder.join('+')}${p._counts.bad?` · ${p._counts.bad} error${p._counts.bad>1?'s':''}`:''}${p._counts.warn?` · ${p._counts.warn} warning${p._counts.warn>1?'s':''}`:''}</span></button>`; }).join('');
+  const empty = FIL.review && !list0.length ? `<p class="muted">No poles need review. Every pole is clean.</p>` : '';
+  return `<div class="md"><div><div style="margin-bottom:8px">${reviewToggle()}</div><nav class="plist" aria-label="Poles">${list}${empty}</nav></div><div class="detail">${P&&list0.length?poleDetail(P):''}</div></div>`;
+}
+function poleDetail(P){
+  const R=P.R, rules=R.ruleOrder, b=R.rules['250B'], c=R.rules['250C'];
+  const sp=specOf(R.poleSpec);
+  const SP=shownPoles(); const idx=SP.findIndex(p=>p.id===P.id);
+  const iss=ISS.filter(i=>i.pole===P.id).sort((a,b)=>({bad:0,warn:1,info:2}[a.sev]-{bad:0,warn:1,info:2}[b.sev]));
+  let h = `<div class="dhead"><h2>${esc(P.id)}</h2>${statusPill(P._status)} ${rules.map(r=>`<span class="pill ${r==='250C'?'c':'info'}">${r}</span>`).join(' ')} <span class="muted">${esc(R.poleSpec)}${R.species?` · ${esc(R.species)}`:''}${P._hag?` · ${f1(P._hag)} ft above ground`:''}</span><span class="spacer"></span>
+    <button class="btn sm" data-nav="${idx>0?esc(SP[idx-1].id):''}" ${idx<=0?'disabled':''}>← ${idx>0?esc(SP[idx-1].id):''}</button><button class="btn sm" data-nav="${idx<SP.length-1?esc(SP[idx+1].id):''}" ${idx>=SP.length-1?'disabled':''}>${idx<SP.length-1?esc(SP[idx+1].id):''} →</button>
+    <button class="btn sm" data-pages="${esc(P.id)}">View report pages</button></div>`;
+  if (P.img && (P.img.d3||P.img.polar)) h += `<div class="imgs">${P.img.d3?`<figure><img src="${P.img.d3}" alt="3D model view of pole ${esc(P.id)} from the PoleForeman report"><figcaption>3D view</figcaption></figure>`:''}${P.img.polar?`<figure class="light"><img src="${P.img.polar}" alt="Plan view of spans and guys at pole ${esc(P.id)}"><figcaption>Plan view</figcaption></figure>`:''}</div>`;
+  // issues
+  h += `<div class="sec"><h3>Findings <span class="muted" style="font-family:var(--sans);font-size:13px;font-weight:500">${iss.length?`${P._counts.bad} errors, ${P._counts.warn} warnings, ${P._counts.info} notes`:''}</span></h3>${iss.length?`<div class="issues">${iss.map(issHtml).join('')}</div>`:'<p class="muted">No findings.</p>'}</div>`;
+  h += spacingSection(P);
+  // rule comparison
+  const cols = rules.map(r=>({r, o:R.rules[r], m:metrics(R.rules[r])}));
+  const row = (lab, fn, fmt) => `<tr><th>${lab}</th>${cols.map(x=>`<td class="${x.r==='250C'?'c':''}">${fmt?fmt(fn(x)):esc(fn(x)??'–')}</td>`).join('')}</tr>`;
+  const pfk = (x,k) => pfPill(P.pf[`${x.r}|comp|${k}`] || P.pf[`summary|${x.r}|${k==='Pole'?'poleH':k.toLowerCase()}`]);
+  h += `<div class="sec"><h3>Analysis summary</h3><div class="tscroll"><table class="cmp"><thead><tr><th></th>${cols.map(x=>`<th class="${x.r==='250C'?'c':''}">${x.r}</th>`).join('')}</tr></thead><tbody>
+    ${row('Pole horizontal', x=>x.m.horz, v=>meter(v,'','pole'))}${row('Pole vertical', x=>x.m.vert, v=>meter(v,'','pole'))}${row('Max framing', x=>x.m.framing, meter)}${row('Max guy wire / insulator', x=>x.m.guy, meter)}${row('Max anchor / rod', x=>x.m.anchor, meter)}
+    <tr><th>PoleForeman status</th>${cols.map(x=>`<td class="${x.r==='250C'?'c':''}"><div class="chips">${['Pole','Framings','Guying'].map(k=>`<span title="${k}">${k}: ${pfk(x,k)}</span>`).join('')}</div></td>`).join('')}</tr>
+    ${row('Conditions', x=>`${x.o.head.temp}° · ${x.o.head.wind} ${x.o.head.windUnit||''} · ${x.o.head.ice??0}" ice · ${x.o.head.state||''}`)}
+    ${row('Grade / district', x=>`${x.o.head.grade||''} · ${x.o.head.district||''}`)}
+    ${row('Pole factors T / W / V / SF', x=>{const n=x.o.nesc.Pole; return n?`${n.tension} / ${n.wind} / ${n.vertical} / ${n.sf}`:'–';})}
+    ${row('Guy factors T / W / V / SF', x=>{const n=x.o.nesc.Guy; return n?`${n.tension} / ${n.wind} / ${n.vertical} / ${n.sf}`:'–';})}
+    ${row('Setting depth / soil', x=>`${x.o.head.setting}' · ${x.o.head.soil||''}`)}
+    ${row('Strength remaining', x=>x.o.head.strength!=null?x.o.head.strength+'%':'–')}
+    ${row('Location', x=>`${x.o.head.lat}, ${x.o.head.lon}`)}
+  </tbody></table></div></div>`;
+  // spans
+  const base = b || R.rules[rules[0]];
+  h += `<div class="sec"><h3>Spans</h3>`;
+  base.spans.forEach(s=>{
+    const sc = c && c.spans.find(x=>x.n===s.n);
+    const st = P.pf[`${base.rule}|span|${s.n}`];
+    h += `<h4 style="margin:12px 0 6px;font-size:16px">Span ${s.n}: ${s.length}' at ${s.bearing}° ${st&&st!=='pass'?pfPill(st):''}</h4>`;
+    if (!s.wires.length && !s.comms.length){ h+=`<p class="muted">No conductors or cables on this span.</p>`; return; }
+    h += `<div class="tscroll"><table><thead><tr><th>Wire</th><th>Phase</th><th class="num">Attach (in)</th><th class="num">Offset</th><th>Bracket</th><th>Bracket %</th><th>Insulator</th><th>Insulator %</th><th class="num">Line angle</th><th class="num">Design tension</th></tr></thead><tbody>`;
+    s.wires.forEach((w,i)=>{ const wc = sc && sc.wires[i];
+      w.phases.forEach((p,j)=>{ const pc = wc && wc.phases[j];
+        const two = (a,b2,mode,modeC) => `${pctHtml(a)}${mode?` <span class="muted">${esc(mode)}</span>`:''}${c?` <span style="color:var(--c)">/ C ${b2==null?'–':f0(b2)+'%'}</span>`:''}`;
+        h += `<tr><td>${j===0?`<b>${esc(w.kind)}</b><br><span class="muted" style="font-size:12px">${esc(w.conductor)}</span>`:''}</td><td>${esc(p.phase)}</td><td class="num">${p.attach}</td><td class="num">${p.offset}</td><td>${esc(p.bracket)}</td><td>${two(p.bracketLoad, pc&&pc.bracketLoad, p.bracketMode)}</td><td>${esc(p.insulator)}</td><td>${two(p.insLoad, pc&&pc.insLoad, p.insMode)}</td><td class="num">${f1(p.angle)}°</td><td class="num">${j===0?`${f0(w.tension)}${wc?` <span style="color:var(--c)">/ ${f0(wc.tension)}</span>`:''}`:''}</td></tr>`;
+      });
+    });
+    s.comms.forEach((m,i)=>{ const mc = sc && sc.comms[i]; h += `<tr><td><b>Comm</b><br><span class="muted" style="font-size:12px">${esc(m.cable)}${m.owner?`, ${esc(m.owner)}`:''}</span></td><td></td><td class="num">${m.attach}</td><td class="num">${m.offset}</td><td colspan="4" class="muted">Sag ${m.sag} in${mc?` / C ${mc.sag} in`:''}, ruling span ${m.ruling}'</td><td></td><td class="num">${f0(m.tension)}${mc?` <span style="color:var(--c)">/ ${f0(mc.tension)}</span>`:''}</td></tr>`; });
+    h += `</tbody></table></div>`;
+  });
+  if (c) h += `<p class="muted" style="font-size:13px">Where two values appear, the second (purple) is the 250C result.</p>`;
+  h += `</div>`;
+  if (base.anchors.length){
+    h += `<div class="sec"><h3>Guying</h3>`;
+    base.anchors.forEach(a=>{ const ac = c && c.anchors.find(x=>x.n===a.n); const st=P.pf[`${base.rule}|anchor|${a.n}`];
+      h += `<h4 style="margin:12px 0 6px;font-size:16px">Anchor ${a.n}: ${a.lead}' lead at ${a.bearing}° ${a._ratio?`<span class="muted" style="font-family:var(--sans);font-size:13px;font-weight:500">lead:height ${a._ratio.toFixed(2)}</span>`:''} ${st&&st!=='pass'?pfPill(st):''}</h4>
+      <div class="tscroll"><table><thead><tr><th>Guy</th><th class="num">Attach (in)</th><th class="num">Tension (lbs)</th><th class="num">Strength</th><th>Wire %</th><th>Insulator</th><th>Insulator %</th></tr></thead><tbody>
+      ${a.wires.map((w,i)=>{ const wc=ac&&ac.wires[i]; return `<tr><td>${esc(w.size)}</td><td class="num">${w.attach}</td><td class="num">${f0(w.tension)}${wc?` <span style="color:var(--c)">/ ${f0(wc.tension)}</span>`:''}</td><td class="num">${f0(w.strength)}</td><td>${pctHtml(w.load)}${wc?` <span style="color:var(--c)">/ C ${f0(wc.load)}%</span>`:''}</td><td>${esc(w.insulator)}</td><td>${pctHtml(w.insLoad)}</td></tr>`; }).join('')}
+      ${a.anchor?`<tr><td colspan="2"><b>${esc(a.anchor.type)}</b> <span class="muted">${esc(a.anchor.soil)} soil, ${esc(a.anchor.rod)}</span></td><td class="num">${f0(a.anchor.tension)}${ac&&ac.anchor?` <span style="color:var(--c)">/ ${f0(ac.anchor.tension)}</span>`:''}</td><td class="num">${f0(a.anchor.holding)}</td><td>Anchor ${pctHtml(a.anchor.load)}${ac&&ac.anchor?` <span style="color:var(--c)">/ C ${f0(ac.anchor.load)}%</span>`:''}</td><td>Rod ${f0(a.anchor.rodStrength)} lbs</td><td>${pctHtml(a.anchor.rodLoad)}</td></tr>`:''}
+      </tbody></table></div>`; });
+    h += `</div>`;
+  }
+  if (base.equipment.length) h += `<div class="sec"><h3>Equipment</h3><div class="tscroll"><table><thead><tr><th>Type</th><th>Item</th><th class="num">Attach (in)</th><th class="num">Weight (lb)</th><th class="num">Direction</th></tr></thead><tbody>${base.equipment.map(e=>`<tr><td>${esc(e.cat)}</td><td>${esc(e.name)}</td><td class="num">${e.attach}</td><td class="num">${f0(e.weight)}</td><td class="num">${f1(e.dir)}°</td></tr>`).join('')}</tbody></table></div></div>`;
+  h += `<p class="muted" style="font-size:12px">${esc(P.fileName)} · ${R.pages} pages · ${esc(R.sw)} / DB ${esc(R.db)} · run by ${esc(R.user)} on ${esc(R.date)}</p>`;
+  return h;
+}
+
+const CLS = {primary:{c:'var(--blue)',n:'Primary'}, neutral:{c:'var(--muted)',n:'Neutral'}, secondary:{c:'var(--ok)',n:'Secondary'}, other:{c:'var(--blue)',n:'Wire'}, comm:{c:'var(--c)',n:'Comm'}, guy:{c:'var(--amber-bar)',n:'Guy'}, equip:{c:'var(--ink)',n:'Equipment'}};
+const ftin = inch => { if (inch==null) return '–'; const neg=inch<0; inch=Math.abs(Math.round(inch)); const f=Math.floor(inch/12), i=inch%12; return (neg?'-':'')+(f?`${f}' `:'')+`${i}"`; };
+function spacingLevels(P){
+  const r = P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]];
+  const items = [];
+  const push = (cls, attach, offset, desc, sub, extra) => { if (attach==null) return; let it = items.find(x=>x.cls===cls && x.attach===attach && x.desc===desc); if (!it){ it={cls, attach, desc, subs:new Set(), offsets:new Set(), spans:new Set(), ...extra}; items.push(it); } if (sub) it.subs.add(sub); if (offset!=null) it.offsets.add(offset); if (extra&&extra.span) it.spans.add(extra.span); };
+  r.spans.forEach(s=>{
+    s.wires.forEach(w=>{ const k=/primary/i.test(w.kind)?'primary':/neutral/i.test(w.kind)?'neutral':/secondary|service/i.test(w.kind)?'secondary':'other';
+      w.phases.forEach(p=>push(k, p.attach, p.offset, `${CLS[k].n==='Wire'?w.kind:CLS[k].n} on ${p.bracket}`, p.phase, {span:s.n})); });
+    s.comms.forEach(c=>push('comm', c.attach, c.offset, `Comm ${c.cable}${c.owner?` (${c.owner})`:''}`, '', {span:s.n}));
+  });
+  r.anchors.forEach(a=>a.wires.forEach(w=>push('guy', w.attach, null, `Guy ${w.size}${w.insulator&&w.insulator!=='None'?` + ${w.insulator}`:''}`, `anchor ${a.n}`, {bearing:a.bearing})));
+  r.equipment.forEach(e=>push('equip', e.attach, null, `${e.name}`, e.cat, {weight:e.weight}));
+  const lv = {}; items.forEach(it=>{ (lv[it.attach]=lv[it.attach]||{attach:it.attach, items:[]}).items.push(it); });
+  const levels = Object.values(lv).sort((a,b)=>a.attach-b.attach);
+  levels.forEach((L,i)=>{ L.gap = i<levels.length-1 ? levels[i+1].attach - L.attach : null; });
+  return {r, levels, items};
+}
+const itemText = it => `${it.desc}${it.subs.size?` · ${[...it.subs].sort().join(', ')}`:''}`;
+function spacingSection(P){
+  const {r, levels} = spacingLevels(P);
+  if (!levels.length) return '';
+  const sp = specOf(P.R.poleSpec), hagIn = (P._hag||((sp.len&&r.head.setting!=null)?sp.len-r.head.setting:null)); const HAG = hagIn!=null ? hagIn*12 : null;
+  const maxAtt = levels[levels.length-1].attach;
+  const spanIn = HAG!=null ? HAG : maxAtt+48;
+  const k = Math.min(1.6, 600/spanIn);            // px per inch, same both axes
+  const y0 = 34, cx = 250, labX = 360, dimX = 150;
+  const Y = a => y0 + a*k;
+  const yG = y0 + spanIn*k;
+  const spread = (ys, m) => { const out=[]; ys.forEach((y,i)=>out.push(i?Math.max(y,out[i-1]+m):y)); return out; };
+  // labels: one per item, grouped by level order
+  const labs = []; levels.forEach(L=>L.items.forEach(it=>labs.push({it, y:Y(L.attach), L})));
+  const ly = spread(labs.map(l=>l.y), 17);
+  const gaps = levels.filter(L=>L.gap!=null).map(L=>({L, y1:Y(L.attach), y2:Y(L.attach+L.gap)}));
+  const gy = spread(gaps.map(g=>(g.y1+g.y2)/2), 14);
+  const H = Math.max(yG, ly[ly.length-1]||0, gy[gy.length-1]||0) + 34;
+  let g = '';
+  // pole
+  g += `<rect x="${cx-7}" y="${y0}" width="14" height="${yG-y0}" rx="3" style="fill:#8a6a45;opacity:.85"/>`;
+  g += `<text x="${cx}" y="${y0-10}" text-anchor="middle" style="fill:var(--muted);font-size:12px">Pole top</text>`;
+  if (HAG!=null){ g += `<line x1="${cx-120}" x2="${cx+120}" y1="${yG}" y2="${yG}" style="stroke:var(--ok);stroke-width:2"/><text x="${cx+124}" y="${yG+4}" style="fill:var(--ok);font-size:12px;font-weight:600">Ground · ${ftin(HAG)} to top</text>`; }
+  // crossarms & items
+  levels.forEach(L=>{ const y=Y(L.attach);
+    const pw = L.items.filter(it=>['primary','neutral','secondary','other'].includes(it.cls));
+    const offs = pw.flatMap(it=>[...it.offsets]);
+    if (offs.length && (Math.max(...offs)-Math.min(...offs))>12){ const x1=cx+Math.min(0,...offs)*k-6, x2=cx+Math.max(0,...offs)*k+6; g += `<rect x="${x1}" y="${y-3}" width="${x2-x1}" height="6" rx="2" style="fill:var(--rule-strong)"/>`; }
+    L.items.forEach(it=>{ const col=CLS[it.cls].c;
+      if (it.cls==='guy'){ g += `<line x1="${cx-7}" y1="${y}" x2="${cx-52}" y2="${y+34}" style="stroke:${col};stroke-width:2"/>`; }
+      else if (it.cls==='equip'){ g += `<rect x="${cx+9}" y="${y-7}" width="22" height="14" rx="2" style="fill:var(--surface);stroke:${col};stroke-width:1.5"/>`; }
+      else { (it.offsets.size?[...it.offsets]:[0]).forEach(o=>{ g += `<circle cx="${cx+o*k}" cy="${y}" r="5" style="fill:${col};stroke:var(--surface);stroke-width:1.5"/>`; }); }
+    });
+  });
+  // right labels with leaders
+  labs.forEach((l,i)=>{ const col=CLS[l.it.cls].c; const xs = l.it.offsets.size?Math.max(...l.it.offsets)*k:0; const x0 = cx + Math.max(xs, l.it.cls==='equip'?31:8) + 6;
+    g += `<path d="M${x0} ${l.y} L${labX-40} ${l.y} L${labX-8} ${ly[i]}" style="fill:none;stroke:var(--rule-strong);stroke-width:1"/>`;
+    g += `<text x="${labX}" y="${ly[i]+4}" style="font-size:12px"><tspan style="fill:${col};font-weight:700">${esc(CLS[l.it.cls].n)}</tspan><tspan style="fill:var(--ink)"> ${esc(l.L.attach)}"${HAG!=null?` · ${ftin(HAG-l.L.attach)} AGL`:''}</tspan><tspan style="fill:var(--muted)"> ${esc(itemText(l.it).replace(/^(Primary|Neutral|Secondary|Comm|Guy) ?/,'').slice(0,52))}</tspan></text>`; });
+  // left gap dimensions
+  gaps.forEach((d,i)=>{ const x=dimX; g += `<line x1="${x}" x2="${x}" y1="${d.y1}" y2="${d.y2}" style="stroke:var(--muted);stroke-width:1"/><line x1="${x-4}" x2="${x+4}" y1="${d.y1}" y2="${d.y1}" style="stroke:var(--muted)"/><line x1="${x-4}" x2="${x+4}" y1="${d.y2}" y2="${d.y2}" style="stroke:var(--muted)"/>`;
+    const mid=(d.y1+d.y2)/2; if (Math.abs(gy[i]-mid)>1) g += `<line x1="${x-6}" y1="${gy[i]}" x2="${x}" y2="${mid}" style="stroke:var(--rule-strong)"/>`;
+    g += `<text x="${x-8}" y="${gy[i]+4}" text-anchor="end" style="fill:var(--ink);font-size:12px;font-weight:600">${d.L.gap}" <tspan style="fill:var(--muted);font-weight:400">${d.L.gap>=12?`(${ftin(d.L.gap)})`:''}</tspan></text>`; });
+  g += `<text x="${dimX}" y="${y0-10}" text-anchor="middle" style="fill:var(--muted);font-size:12px">Gap</text>`;
+  const svg = `<svg viewBox="0 0 800 ${Math.ceil(H)}" role="img" aria-label="Attachment diagram for pole ${esc(P.id)}"><title>Attachment heights and spacing on ${esc(P.id)}</title>${g}</svg>`;
+  // separation summary
+  const supply = levels.filter(L=>L.items.some(it=>['primary','other'].includes(it.cls))), comm = levels.filter(L=>L.items.some(it=>it.cls==='comm'));
+  const neut = levels.filter(L=>L.items.some(it=>it.cls==='neutral'));
+  const notes = [];
+  if (supply.length && comm.length){ const sep = Math.min(...comm.map(L=>L.attach)) - Math.max(...supply.map(L=>L.attach)); notes.push(`Lowest primary to highest comm: <b>${sep}" (${ftin(sep)})</b>${sep<S.commSep?` <span class="pill warn">under ${S.commSep}"</span>`:''}`); }
+  if (neut.length && comm.length){ const lowN=Math.max(...neut.map(L=>L.attach)); const sep = Math.min(...comm.map(L=>L.attach)) - lowN; if (sep>0) notes.push(`Lowest neutral to highest comm: <b>${sep}" (${ftin(sep)})</b>`); }
+  if (supply.length && neut.length){ const sep = Math.min(...neut.map(L=>L.attach)) - Math.max(...supply.map(L=>L.attach)); notes.push(sep>0?`Lowest primary to neutral: <b>${sep}" (${ftin(sep)})</b>`:`Neutral is mounted above the lowest primary (${ftin(-sep)} higher)`); }
+  const rows = levels.map((L,i)=>`<tr><td>${L.items.map(it=>`<div><span class="dot" style="background:${CLS[it.cls].c}"></span> <b style="font-weight:600">${esc(CLS[it.cls].n)}</b> <span class="muted">${esc(itemText(it).replace(/^(Primary|Neutral|Secondary|Comm|Guy) ?/,''))}</span></div>`).join('')}</td><td class="num">${L.attach}"</td><td class="num">${HAG!=null?ftin(HAG-L.attach):'–'}</td><td class="num">${L.gap!=null?`<b style="font-weight:600">${L.gap}"</b> <span class="muted">${ftin(L.gap)}</span>`:'<span class="muted">lowest</span>'}</td></tr>`).join('');
+  TABLES['spacing'] = {cols:[{l:'Attachment',v:L=>L.items.map(it=>`${CLS[it.cls].n} ${itemText(it)}`).join(' / ')},{l:'From top (in)',v:L=>L.attach},{l:'Above ground (ft)',v:L=>HAG!=null?Math.round((HAG-L.attach)/12*100)/100:''},{l:'Gap to next below (in)',v:L=>L.gap}], rows:levels};
+  return `<div class="sec"><h3>Attachment spacing <span class="muted" style="font-family:var(--sans);font-size:13px;font-weight:500">${esc(r.rule)} geometry, drawn to scale</span><span class="spacer"></span><button class="btn sm" data-copy="spacing">Copy table</button></h3>
+  <div class="spacing"><div>${svg}<div class="legend" style="margin-top:8px">${Object.entries(CLS).filter(([k])=>levels.some(L=>L.items.some(it=>it.cls===k))).map(([k,v])=>`<span><i style="background:${v.c}"></i>${v.n}</span>`).join('')}</div></div>
+  <div><div class="tscroll"><table><thead><tr><th>Attachment</th><th class="num">From top</th><th class="num">Above ground</th><th class="num">Gap to next</th></tr></thead><tbody>${rows}</tbody></table></div>
+  ${notes.length?`<div class="gapnote">${notes.join('<br>')}</div>`:''}
+  <p class="muted" style="font-size:12px;margin:8px 0 0">Heights come from each attachment's "Attach (in)" in the report, measured down from the pole top. Above ground uses pole length minus setting depth${HAG!=null?` (${ftin(HAG)})`:''}. Horizontal positions use the report offsets.</p></div></div></div>`;
+}
+function issHtml(i){ return `<div class="iss ${i.sev}"><b>${esc(i.title)}</b> ${i.rule?`<span class="pill ${i.rule==='250C'?'c':'info'}">${esc(i.rule)}</span>`:''} <span class="pill none">${esc(i.cat)}</span>${i.detail?`<div class="w">${esc(i.detail)}</div>`:''}</div>`; }
+
+$('#view').addEventListener('click', e=>{
+  const pc=e.target.closest('[data-pole]'); if (pc){ CUR=pc.dataset.pole; if (TAB!=='poles') TAB='poles'; render(); window.scrollTo({top:$('.panel').offsetTop-60}); return; }
+  const nv=e.target.closest('[data-nav]'); if (nv){ const p=POLES.find(x=>x.id===nv.dataset.nav); if(p){ CUR=p.id; render(); } return; }
+  const rv=e.target.closest('[data-review]'); if (rv){ FIL.review = rv.dataset.review==='1'; render(); return; }
+  const pg=e.target.closest('[data-pages]'); if (pg){ openPages(pg.dataset.pages); return; }
+  const th=e.target.closest('th[data-sort]'); if (th){ const t=th.dataset.t, k=th.dataset.sort; const cur=SORT[t]||{}; SORT[t]= cur.k===k?{k,asc:!cur.asc}:{k,asc:false}; render(); return; }
+  const cp=e.target.closest('[data-copy]'); if (cp){ copyTable(cp.dataset.copy); return; }
+});
+$('#view').addEventListener('change', e=>{
+  const t=e.target;
+  if (t.dataset.set){ const v=parseFloat(t.value); if(!isNaN(v)){ S[t.dataset.set]=v; saveS(); runChecks(); renderKpis(); toast('Checks updated'); } }
+  if (t.dataset.fil){ FIL[t.dataset.fil]=t.value; render(); }
+});
+$('#view').addEventListener('input', e=>{ const t=e.target; if (t.dataset.fil==='q'){ FIL.q=t.value; const pos=t.selectionStart; render(); const n=$('#view [data-fil="q"]'); if(n){ n.focus(); n.setSelectionRange(pos,pos);} } });
+
+/* generic sortable table */
+const TABLES = {};
+function table(id, cols, rows, opts={}){
+  const s = SORT[id] || {k:opts.sort||cols[0].k, asc:opts.asc!==undefined?opts.asc:true};
+  const col = cols.find(c=>c.k===s.k)||cols[0];
+  rows = rows.slice().sort((a,b)=>{ const x=col.sv?col.sv(a):col.v(a), y=col.sv?col.sv(b):col.v(b); const c=(typeof x==='number'&&typeof y==='number')?x-y:natural(x??'',y??''); return s.asc?c:-c; });
+  TABLES[id] = {cols, rows};
+  return `<div class="tscroll"><table><thead><tr>${cols.map(c=>`<th class="s ${c.num?'num':''} ${s.k===c.k?'sorted':''}" data-sort="${c.k}" data-t="${id}">${esc(c.l)}${s.k===c.k?(s.asc?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr class="${opts.click?'click':''}" ${opts.click?`data-pole="${esc(opts.click(r))}"`:''}>${cols.map(c=>`<td class="${c.num?'num':''}">${c.h?c.h(r):esc(c.v(r)??'–')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+async function copyTable(id){
+  const t=TABLES[id]; if(!t) return;
+  const txt=[t.cols.map(c=>c.l).join('\t'), ...t.rows.map(r=>t.cols.map(c=>{ const v=c.v(r); return v==null?'':String(v).replace(/[\t\n]/g,' '); }).join('\t'))].join('\n');
+  let ok=false; try{ await navigator.clipboard.writeText(txt); ok=true; }catch(e){}
+  if(!ok){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ok=document.execCommand('copy');}catch(e){} ta.remove(); }
+  toast(ok?`Copied ${t.rows.length} rows`:'Copy was blocked by the browser');
+}
+
+function renderCompare(){
+  let rows = POLES.map(p=>{ const b=p.R.rules['250B'], c=p.R.rules['250C']; return {p, id:p.id, spec:p.R.poleSpec, rules:p.R.ruleOrder.join('+'), mb:b?metrics(b):{}, mc:c?metrics(c):null, setting:(b||{}).head?.setting, hag:p._hag, spans:(b||p.R.rules[p.R.ruleOrder[0]]).spans.length, anchors:(b||p.R.rules[p.R.ruleOrder[0]]).anchors.length, status:p._status, bad:p._counts.bad, warn:p._counts.warn}; });
+  if (FIL.review) rows=rows.filter(r=>r.status!=='ok');
+  if (FIL.status) rows=rows.filter(r=>r.status===FIL.status);
+  if (FIL.rules) rows=rows.filter(r=>r.rules===FIL.rules);
+  const govOf = r => { const items=[['pole',r.mb.horz,'250B pole horiz'],['pole',r.mb.vert,'250B pole vert'],['eq',r.mb.framing,'250B framing'],['eq',r.mb.guy,'250B guy'],['eq',r.mb.anchor,'250B anchor']];
+    if (r.mc) items.push(['pole',r.mc.horz,'250C pole horiz'],['pole',r.mc.vert,'250C pole vert'],['eq',r.mc.framing,'250C framing'],['eq',r.mc.guy,'250C guy'],['eq',r.mc.anchor,'250C anchor']);
+    let best={v:null,cls:'',what:''}; items.forEach(([k,v,w])=>{ if(v==null) return; const pct=v/TH(k)[1]*100; if(best.v==null||pct>best.v) best={v:pct,cls:lv(v,k),what:`${w} ${f0(v)}%`}; }); return best; };
+  const maxOf = r => Math.max(...[r.mb.horz,r.mb.vert,r.mb.framing,r.mb.guy,r.mb.anchor,r.mc&&r.mc.horz,r.mc&&r.mc.vert,r.mc&&r.mc.framing,r.mc&&r.mc.guy,r.mc&&r.mc.anchor].filter(x=>x!=null));
+  const cols=[
+    {k:'id',l:'Pole',v:r=>r.id,h:r=>`<span class="dot ${r.status}"></span> <b>${esc(r.id)}</b>`},
+    {k:'spec',l:'Height / class',v:r=>r.spec},
+    {k:'rules',l:'Analyses',v:r=>r.rules},
+    {k:'bh',l:'250B horiz',num:true,v:r=>r.mb.horz,h:r=>pctHtml(r.mb.horz,'pole')},
+    {k:'ch',l:'250C horiz',num:true,v:r=>r.mc?r.mc.horz:null,h:r=>r.mc?pctHtml(r.mc.horz,'pole'):'<span class="muted">–</span>'},
+    {k:'bv',l:'250B vert',num:true,v:r=>r.mb.vert,h:r=>pctHtml(r.mb.vert,'pole')},
+    {k:'cv',l:'250C vert',num:true,v:r=>r.mc?r.mc.vert:null,h:r=>r.mc?pctHtml(r.mc.vert,'pole'):'<span class="muted">–</span>'},
+    {k:'bf',l:'Framing B / C',num:true,v:r=>r.mb.framing,h:r=>`${pctHtml(r.mb.framing)}${r.mc?` / ${pctHtml(r.mc.framing)}`:''}`},
+    {k:'bg',l:'Guy B / C',num:true,v:r=>r.mb.guy,h:r=>`${pctHtml(r.mb.guy)}${r.mc?` / ${pctHtml(r.mc.guy)}`:''}`},
+    {k:'ba',l:'Anchor B / C',num:true,v:r=>r.mb.anchor,h:r=>`${pctHtml(r.mb.anchor)}${r.mc?` / ${pctHtml(r.mc.anchor)}`:''}`},
+    {k:'max',l:'Governing (% of limit)',num:true,v:r=>govOf(r).v,h:r=>{ const g=govOf(r); return g.v==null?'–':`<div class="meter"><div class="tr"><i class="${g.cls}" style="width:${Math.min(g.v,100)}%"></i></div><span class="pct ${g.cls}">${f0(g.v)}%</span></div><div class="muted" style="font-size:11px;text-align:right">${esc(g.what)}</div>`; }},
+    {k:'setting',l:'Setting',num:true,v:r=>r.setting,h:r=>r.setting!=null?r.setting+"'":'–'},
+    {k:'spans',l:'Spans',num:true,v:r=>r.spans},
+    {k:'anchors',l:'Anchors',num:true,v:r=>r.anchors},
+    {k:'bad',l:'Errors',num:true,v:r=>r.bad,h:r=>r.bad?`<span class="pct bad">${r.bad}</span>`:'0'},
+    {k:'warn',l:'Warnings',num:true,v:r=>r.warn,h:r=>r.warn?`<span class="pct warn">${r.warn}</span>`:'0'},
+  ];
+  const chart = POLES.map(p=>{ const b=p.R.rules['250B'], c=p.R.rules['250C']; const bh=b?.head.horz, ch=c?.head.horz; const mx=Math.max(110, ...POLES.flatMap(q=>q.R.ruleOrder.map(r=>q.R.rules[r].head.horz||0)));
+    return `<div class="crow"><button class="link" data-pole="${esc(p.id)}" style="border:0;background:none;color:var(--blue);font-weight:600;text-align:left;padding:0">${esc(p.id)}</button><div class="cbars">${bh!=null?`<div class="cbar ${lv(bh,'pole')?'':''}" style="width:${bh/mx*100}%;${lv(bh,'pole')?`background:var(--${lv(bh,'pole')==='bad'?'bad':'amber-bar'})`:''}" title="250B ${bh}%"></div>`:''}${ch!=null?`<div class="cbar c" style="width:${ch/mx*100}%;${lv(ch,'pole')?`background:var(--${lv(ch,'pole')==='bad'?'bad':'amber-bar'})`:''}" title="250C ${ch}%"></div>`:''}<span class="wl" style="left:${S.poleWarn/mx*100}%"></span><span class="lim" style="left:${S.poleFail/mx*100}%"></span></div></div>`; }).join('');
+  return `<div class="viewbar"><h2>Compare poles</h2><button class="btn sm" data-copy="compare">Copy table</button><div class="hint">Click a row to open the pole. Governing is the highest percentage anywhere on the pole under either rule.</div></div>
+  <div class="filters">${reviewToggle()}<select data-fil="status" aria-label="Status"><option value="">All statuses</option><option value="bad" ${FIL.status==='bad'?'selected':''}>Needs attention</option><option value="warn" ${FIL.status==='warn'?'selected':''}>Review</option><option value="ok" ${FIL.status==='ok'?'selected':''}>Clean</option></select><select data-fil="rules" aria-label="Analyses"><option value="">250B and 250B + 250C</option><option value="250B+250C" ${FIL.rules==='250B+250C'?'selected':''}>250B + 250C only</option><option value="250B" ${FIL.rules==='250B'?'selected':''}>250B only</option></select></div>
+  ${table('compare', cols, rows, {click:r=>r.id})}
+  <div class="sec"><h3>Horizontal pole loading along the line</h3><div class="legend"><span><i style="background:var(--blue)"></i>250B</span><span><i style="background:var(--c)"></i>250C</span><span><i style="border-top:2px dotted var(--amber-bar);height:0"></i>Preferred max ${S.poleWarn}%</span><span><i style="border-top:2px dashed var(--bad);height:0"></i>Limit ${S.poleFail}%</span></div><div class="chart">${chart}</div></div>`;
+}
+function renderSpans(){
+  const rowsC = CONN.filter(c=>!c.B || natural(c.A.id,c.B.id)<0 || !c.t);
+  const stH = c => ({ok:'<span class="pill ok">Match</span>',open:'<span class="pill none">Pole not loaded</span>',gps:'<span class="pill warn">Length vs GPS</span>',noback:'<span class="pill warn">No span back</span>',len:'<span class="pill warn">Length mismatch</span>',cond:'<span class="pill warn">Conductor mismatch</span>'}[c.state]||'');
+  const pcols=[
+    {k:'from',l:'From',v:r=>r.A.id},{k:'sn',l:'Span',num:true,v:r=>r.s.n},
+    {k:'to',l:'To',v:r=>r.B?r.B.id:'not loaded',h:r=>r.B?`<b>${esc(r.B.id)}</b>`:'<span class="muted">not in this set</span>'},
+    {k:'la',l:'Length here',num:true,v:r=>r.s.length,h:r=>`${r.s.length}' <span class="muted">${r.s.bearing}°</span>`},
+    {k:'lb',l:'Length on other pole',num:true,v:r=>r.t?r.t.length:null,h:r=>r.t?`${r.t.length}' <span class="muted">span ${r.t.n}, ${r.t.bearing}°</span>`:'–'},
+    {k:'gps',l:'Distance from coordinates',num:true,v:r=>r.dist!=null?Math.round(r.dist*10)/10:null,h:r=>r.dist!=null?f1(r.dist)+"'":'–'},
+    {k:'st',l:'Check',v:r=>r.state,h:stH},
+    {k:'cond',l:'Conductors',v:r=>r.s.wires.map(w=>`${w.kind}: ${w.conductor}`).join('; ')},
+  ];
+  const all = POLES.flatMap(P=>{ const r=P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]]; const c=P.R.rules['250C']; return r.spans.map(s=>({P, s, sc:c&&c.spans.find(x=>x.n===s.n)})); });
+  const acols=[
+    {k:'pole',l:'Pole',v:r=>r.P.id},{k:'n',l:'Span',num:true,v:r=>r.s.n},{k:'len',l:'Length (ft)',num:true,v:r=>r.s.length},{k:'brg',l:'Bearing',num:true,v:r=>r.s.bearing,h:r=>r.s.bearing+'°'},
+    {k:'wires',l:'Wires',v:r=>r.s.wires.map(w=>`${w.kind} ${w.conductor}`).join('; ')||'none'},
+    {k:'tb',l:'Primary tension B',num:true,v:r=>(r.s.wires.find(w=>/primary/i.test(w.kind))||{}).tension??null,h:r=>f0((r.s.wires.find(w=>/primary/i.test(w.kind))||{}).tension)},
+    {k:'tc',l:'Primary tension C',num:true,v:r=>r.sc?((r.sc.wires.find(w=>/primary/i.test(w.kind))||{}).tension??null):null,h:r=>r.sc?f0((r.sc.wires.find(w=>/primary/i.test(w.kind))||{}).tension):'–'},
+    {k:'ang',l:'Max line angle',num:true,v:r=>Math.max(0,...r.s.wires.flatMap(w=>w.phases.map(p=>p.angle||0))),h:r=>f1(Math.max(0,...r.s.wires.flatMap(w=>w.phases.map(p=>p.angle||0))))+'°'},
+    {k:'comm',l:'Comm cables',num:true,v:r=>r.s.comms.length},
+    {k:'sag',l:'Comm sag (in)',num:true,v:r=>r.s.comms[0]?.sag??null},
+  ];
+  return `<div class="viewbar"><h2>Span connections</h2><button class="btn sm" data-copy="pairs">Copy table</button><div class="hint">Each span is followed along its bearing using the pole coordinates in the reports. When it lands on another loaded pole, that pole's span back is compared. Tolerance: ${S.spanFt} ft or ${S.spanPct}%, ${S.ang}° bearing, adjustable in Settings.</div></div>
+  ${table('pairs', pcols, rowsC, {sort:'from', click:r=>r.A.id})}
+  <div class="viewbar" style="margin-top:22px"><h2>Every span</h2><button class="btn sm" data-copy="allspans">Copy table</button></div>
+  ${table('allspans', acols, all, {sort:'pole', click:r=>r.P.id})}`;
+}
+function renderGuying(){
+  const rows = POLES.flatMap(P=>{ const r=P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]]; const c=P.R.rules['250C']; return r.anchors.flatMap(a=>{ const ac=c&&c.anchors.find(x=>x.n===a.n); return a.wires.map((w,i)=>({P,a,w,i,wc:ac&&ac.wires[i],ac})); }); });
+  const cols=[
+    {k:'pole',l:'Pole',v:r=>r.P.id},{k:'an',l:'Anchor',num:true,v:r=>r.a.n},{k:'lead',l:'Lead (ft)',num:true,v:r=>r.a.lead},{k:'brg',l:'Bearing',num:true,v:r=>r.a.bearing,h:r=>r.a.bearing+'°'},
+    {k:'ratio',l:'Lead : height',num:true,v:r=>r.a._ratio!=null?Math.round(r.a._ratio*100)/100:null,h:r=>r.a._ratio!=null?(r.a._ratio<S.lead?`<span class="pct warn">${r.a._ratio.toFixed(2)}</span>`:r.a._ratio.toFixed(2)):'–'},
+    {k:'size',l:'Guy',v:r=>r.w.size},{k:'att',l:'Attach (in)',num:true,v:r=>r.w.attach},
+    {k:'ten',l:'Tension B',num:true,v:r=>r.w.tension,h:r=>f0(r.w.tension)},{k:'wl',l:'Wire % B',num:true,v:r=>r.w.load,h:r=>meter(r.w.load)},
+    {k:'wlc',l:'Wire % C',num:true,v:r=>r.wc?r.wc.load:null,h:r=>r.wc?meter(r.wc.load,'c'):'<span class="muted">–</span>'},
+    {k:'ins',l:'Insulator',v:r=>r.w.insulator},
+    {k:'atype',l:'Anchor',v:r=>r.a.anchor?`${r.a.anchor.type} / ${r.a.anchor.rod}`:''},
+    {k:'al',l:'Anchor % B',num:true,v:r=>r.a.anchor?.load??null,h:r=>pctHtml(r.a.anchor?.load)},
+    {k:'rl',l:'Rod % B',num:true,v:r=>r.a.anchor?.rodLoad??null,h:r=>pctHtml(r.a.anchor?.rodLoad)},
+    {k:'alc',l:'Anchor % C',num:true,v:r=>r.ac&&r.ac.anchor?r.ac.anchor.load:null,h:r=>r.ac&&r.ac.anchor?pctHtml(r.ac.anchor.load):'<span class="muted">–</span>'},
+  ];
+  if (!rows.length) return `<p class="muted">No guying in these reports.</p>`;
+  return `<div class="viewbar"><h2>All guys and anchors</h2><button class="btn sm" data-copy="guys">Copy table</button><div class="hint">One row per guy wire. Lead : height uses pole length minus setting depth, less the highest guy's attachment (measured down from the pole top).</div></div>${table('guys', cols, rows, {sort:'pole', click:r=>r.P.id})}`;
+}
+function renderEquip(){
+  const eq = POLES.flatMap(P=>{ const r=P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]]; return r.equipment.map(e=>({P,e})); });
+  const newItems = [];
+  POLES.forEach(P=>{ const r=P.R.rules['250B']||P.R.rules[P.R.ruleOrder[0]]; const seen=new Set();
+    const addN=(what,item,where)=>{ const k=what+'|'+item; if(seen.has(k)) return; seen.add(k); newItems.push({P,what,item,where}); };
+    r.spans.forEach(s=>s.wires.forEach(w=>{ if (!/^\(L\)/.test(w.conductor)) addN('Conductor', `${w.kind}: ${w.conductor}`, `span ${s.n}`); w.phases.forEach(p=>{ if (p.bracket && !/^\(L\)/.test(p.bracket) && !/^(None|Eye Bolt|Machine Bolt|Spool Rack)$/i.test(p.bracket)) addN('Bracket', p.bracket, `span ${s.n} ${p.phase}`); if (p.insulator && !/^\(L\)/.test(p.insulator) && !/^(None|Neutral Dead End|3" Spool)$/i.test(p.insulator)) addN('Insulator', p.insulator, `span ${s.n} ${p.phase}`); }); }));
+    r.anchors.forEach(a=>{ addN('Anchor', a.anchor?`${a.anchor.type}, ${a.anchor.rod}`:'(no anchor data)', `anchor ${a.n}`); a.wires.forEach(w=>addN('Guy', `${w.size}${w.insulator&&w.insulator!=='None'?` with ${w.insulator}`:''}`, `anchor ${a.n}`)); });
+    if (/non-s/i.test(P.R.poleSpec)) addN('Pole', P.R.poleSpec, 'pole');
+  });
+  const ecols=[{k:'pole',l:'Pole',v:r=>r.P.id},{k:'cat',l:'Type',v:r=>r.e.cat},{k:'name',l:'Item',v:r=>r.e.name},{k:'att',l:'Attach (in)',num:true,v:r=>r.e.attach},{k:'wt',l:'Weight (lb)',num:true,v:r=>r.e.weight},{k:'dir',l:'Direction',num:true,v:r=>r.e.dir,h:r=>f1(r.e.dir)+'°'}];
+  const ncols=[{k:'pole',l:'Pole',v:r=>r.P.id},{k:'what',l:'Type',v:r=>r.what},{k:'item',l:'Item',v:r=>r.item},{k:'where',l:'Where',v:r=>r.where}];
+  const tally={}; newItems.forEach(n=>{ const k=n.what+': '+n.item; tally[k]=(tally[k]||0)+1; });
+  return `<div class="viewbar"><h2>Equipment</h2>${eq.length?'<button class="btn sm" data-copy="equip">Copy table</button>':''}</div>${eq.length?table('equip', ecols, eq, {sort:'pole', click:r=>r.P.id}):'<p class="muted">No equipment modeled.</p>'}
+  <div class="viewbar" style="margin-top:22px"><h2>New work</h2><button class="btn sm" data-copy="newwork">Copy table</button><div class="hint">Items without the (L) existing prefix, plus all guys and anchors (PoleForeman doesn't mark those). Confirm against the design before building a material list.</div></div>
+  <div class="tscroll" style="margin-bottom:12px"><table><thead><tr><th>Item</th><th class="num">Poles</th></tr></thead><tbody>${Object.entries(tally).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v}</td></tr>`).join('')}</tbody></table></div>
+  ${table('newwork', ncols, newItems, {sort:'pole', click:r=>r.P.id})}`;
+}
+function renderIssues(){
+  let rows = ISS.slice();
+  if (FIL.sev) rows = rows.filter(i=>i.sev===FIL.sev);
+  if (FIL.cat) rows = rows.filter(i=>i.cat===FIL.cat);
+  const q=FIL.q.trim().toLowerCase(); if (q) rows=rows.filter(i=>(i.pole+' '+i.title+' '+i.detail+' '+i.cat).toLowerCase().includes(q));
+  const cats=[...new Set(ISS.map(i=>i.cat))].sort();
+  const cols=[
+    {k:'sev',l:'Severity',v:r=>({bad:'Error',warn:'Warning',info:'Note'}[r.sev]),sv:r=>({bad:0,warn:1,info:2}[r.sev]),h:r=>`<span class="pill ${r.sev}">${({bad:'Error',warn:'Warning',info:'Note'}[r.sev])}</span>`},
+    {k:'pole',l:'Pole',v:r=>r.pole},{k:'rule',l:'Rule',v:r=>r.rule},{k:'cat',l:'Area',v:r=>r.cat},
+    {k:'title',l:'Finding',v:r=>r.title,h:r=>`<b style="font-weight:600;white-space:normal">${esc(r.title)}</b>`},
+    {k:'detail',l:'Detail',v:r=>r.detail,h:r=>`<span class="muted" style="white-space:normal;display:block;min-width:220px">${esc(r.detail)}</span>`},
+  ];
+  const c=s=>ISS.filter(i=>i.sev===s).length;
+  return `<div class="viewbar"><h2>Issues</h2><button class="btn sm" data-copy="issues">Copy table</button><div class="hint">${c('bad')} errors, ${c('warn')} warnings, ${c('info')} notes across ${POLES.length} poles.</div></div>
+  <div class="filters"><input type="search" data-fil="q" value="${esc(FIL.q)}" placeholder="Search findings" aria-label="Search findings"><select data-fil="sev" aria-label="Severity"><option value="">All severities</option><option value="bad" ${FIL.sev==='bad'?'selected':''}>Errors</option><option value="warn" ${FIL.sev==='warn'?'selected':''}>Warnings</option><option value="info" ${FIL.sev==='info'?'selected':''}>Notes</option></select><select data-fil="cat" aria-label="Area"><option value="">All areas</option>${cats.map(x=>`<option ${FIL.cat===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+  ${rows.length?table('issues', cols, rows, {sort:'sev', click:r=>r.pole==='Project'?POLES[0].id:r.pole}):'<p class="muted">Nothing matches.</p>'}`;
+}
+function renderSettings(){
+  const f=(k,l,d,step)=>`<div><label for="s_${k}">${l}</label><input id="s_${k}" type="number" step="${step||1}" value="${S[k]}" data-set="${k}"><div class="d">${d}</div></div>`;
+  return `<div class="viewbar"><h2>Check settings</h2><button class="btn sm" id="resetS">Reset to defaults</button><div class="hint">Changes apply immediately and are remembered in this browser.</div></div>
+  <div class="settings">
+    ${f('poleFail','Pole loading limit (%)','Pole horizontal or vertical loading above this is an error.')}
+    ${f('poleWarn','Pole review above (%)','Pole loading above this, but within the limit, is flagged for review.')}
+    ${f('eqFail','Equipment limit (%)','Crossarms, brackets, insulators, guys, guy insulators, anchors and rods above this are errors.')}
+    ${f('eqWarn','Equipment preferred max (%)','Equipment above this, but within the limit, is flagged for review.')}
+    ${f('lead','Minimum guy lead : height','Lead divided by guy attachment height above ground.',0.05)}
+    ${f('commSep','Comm below lowest primary (in)','Vertical separation at the pole between the highest comm and the lowest primary conductor. Set to your utility\u2019s standard.')}
+    ${f('spanFt','Span length tolerance (ft)','Allowed difference between two poles\u2019 versions of the same span.',0.5)}
+    ${f('spanPct','Span length tolerance (%)','The larger of the two tolerances is used.',0.5)}
+    ${f('ang','Bearing tolerance (°)','How far from 180° two spans can be and still count as the same span.',0.5)}
+    ${f('hag250c','250C height trigger (ft above ground)','Poles taller than this with no 250C analysis are flagged.')}
+  </div>
+  <div class="sec"><h3>NESC values checked</h3><p class="muted" style="max-width:80ch">250B Grade C: pole load factors 1.3 tension, 1.75 wind, 1.9 vertical with a 0.85 strength factor; guys 1.3 / 1.75 / 1.5 with 0.9. 250C: all load factors 1.0, pole strength factor 0.75, guys 0.9. Light district: 30°F, 9 psf, no ice (Medium 15°F, 4 psf, ¼"; Heavy 0°F, 4 psf, ½"). Other grades show their factors without an expected-value check.</p></div>`;
+}
+document.addEventListener('click', e=>{ if (e.target.id==='resetS'){ S={...DEF}; saveS(); runChecks(); renderKpis(); render(); toast('Settings reset'); } });
+
+/* ---------- page viewer ---------- */
+let LB = {P:null, doc:null, n:1};
+async function openPages(id){
+  const P=POLES.find(p=>p.id===id); if(!P) return;
+  if (!P.bytes){ toast('The PDF isn\u2019t stored for this pole. Add it again to view pages.'); return; }
+  try { LB.doc = await pdfjsLib.getDocument({data:new Uint8Array(P.bytes.slice(0))}).promise; } catch(e){ toast('Could not open the PDF'); return; }
+  LB.P=P; LB.n=1; $('#lb').hidden=false; $('#lbTitle').textContent=`${P.id} · ${P.fileName}`; showPage();
+}
+async function showPage(){
+  const d=LB.doc; $('#lbN').textContent=`${LB.n} of ${d.numPages}`; $('#lbPrev').disabled=LB.n<=1; $('#lbNext').disabled=LB.n>=d.numPages;
+  const p=await d.getPage(LB.n); const vp=p.getViewport({scale:2}); const cv=document.createElement('canvas'); cv.width=vp.width; cv.height=vp.height; const ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height);
+  await p.render({canvasContext:ctx, viewport:vp}).promise;
+  $('#lbPg').innerHTML=''; const im=new Image(); im.src=cv.toDataURL('image/png'); im.alt=`Page ${LB.n} of the report for ${LB.P.id}`; $('#lbPg').appendChild(im);
+}
+$('#lbPrev').onclick=()=>{ if(LB.n>1){LB.n--; showPage();} }; $('#lbNext').onclick=()=>{ if(LB.doc&&LB.n<LB.doc.numPages){LB.n++; showPage();} };
+$('#lbClose').onclick=()=>{ $('#lb').hidden=true; };
+document.addEventListener('keydown', e=>{ if ($('#lb').hidden) return; if (e.key==='Escape') $('#lbClose').click(); if (e.key==='ArrowRight') $('#lbNext').click(); if (e.key==='ArrowLeft') $('#lbPrev').click(); });
+
+document.addEventListener('click', e=>{ if (e.target.closest('#reviewBtn') || e.target.closest('[data-gotoreview]')){ FIL.review=true; TAB='poles'; CUR=null; render(); const pn=$('.panel'); if(pn) window.scrollTo({top:pn.offsetTop-60}); } });
+let tt; function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('show'),2600); }
+})();
+</script>
+</body>
+</html>
